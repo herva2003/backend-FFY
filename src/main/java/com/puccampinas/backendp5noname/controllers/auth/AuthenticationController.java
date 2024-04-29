@@ -40,12 +40,15 @@ public class AuthenticationController {
     PasswordEncoder passwordEncoder;
     @Autowired
     UserService userService;
+    @Autowired
+    private TokenService tokenService;
 
-    @PostMapping("/login")
+    @PostMapping("login")
     @Transactional
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO dto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getLogin(), dto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
         User user = (User) authentication.getPrincipal();
 
         RefreshToken refreshToken = new RefreshToken();
