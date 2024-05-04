@@ -3,6 +3,7 @@ package com.puccampinas.backendp5noname.controllers.auth;
 
 import com.puccampinas.backendp5noname.domain.RefreshToken;
 import com.puccampinas.backendp5noname.domain.User;
+import com.puccampinas.backendp5noname.dtos.ApiResponse;
 import com.puccampinas.backendp5noname.dtos.LoginDTO;
 import com.puccampinas.backendp5noname.dtos.SignupDTO;
 import com.puccampinas.backendp5noname.dtos.TokenDTO;
@@ -43,13 +44,14 @@ public class AuthenticationController {
     @Autowired
     private TokenService tokenService;
 
-    @PostMapping("login")
-    @Transactional
-    public ResponseEntity<?> login(@Valid @RequestBody LoginDTO dto) {
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<TokenDTO>>  login(@Valid @RequestBody LoginDTO dto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getLogin(), dto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         User user = (User) authentication.getPrincipal();
+
+        if(user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ApiResponse<>(HttpStatus.NOT_FOUND, "User not found", null));
 
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setOwner(user);
@@ -58,12 +60,15 @@ public class AuthenticationController {
         String accessToken = jwtHelper.generateAccessToken(user);
         String refreshTokenString = jwtHelper.generateRefreshToken(user, refreshToken);
 
-        return ResponseEntity.ok(new TokenDTO(user.getId(), accessToken, refreshTokenString));
+        TokenDTO tokenDTO = new TokenDTO(accessToken, refreshTokenString);
+
+        return ResponseEntity
+                .ok(new ApiResponse<>(HttpStatus.OK, "Login successful", tokenDTO));
     }
 
-    @PostMapping("signup")
-    @Transactional
-    public ResponseEntity<?> signup(@Valid @RequestBody SignupDTO dto) {
+    @PostMapping("/signup")
+    public ResponseEntity<ApiResponse<TokenDTO>> signup(@Valid @RequestBody SignupDTO dto) {
+        System.out.println(dto.toString());
         User user = new User(dto, passwordEncoder.encode(dto.getPassword()));
         userRepository.save(user);
 
@@ -74,10 +79,14 @@ public class AuthenticationController {
         String accessToken = jwtHelper.generateAccessToken(user);
         String refreshTokenString = jwtHelper.generateRefreshToken(user, refreshToken);
 
-        return ResponseEntity.ok(new TokenDTO(user.getId(), accessToken, refreshTokenString));
+
+        TokenDTO tokenDTO = new TokenDTO(accessToken, refreshTokenString);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(HttpStatus.CREATED, "User registered successfully", tokenDTO));
     }
 
-    @PostMapping("logout")
+    @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestBody TokenDTO dto) {
         String refreshTokenString = dto.getRefreshToken();
         if (jwtHelper.validateRefreshToken(refreshTokenString) && refreshTokenRepository.existsById(jwtHelper.getTokenIdFromRefreshToken(refreshTokenString))) {
@@ -111,7 +120,7 @@ public class AuthenticationController {
             User user = userService.findById(jwtHelper.getUserIdFromRefreshToken(refreshTokenString));
             String accessToken = jwtHelper.generateAccessToken(user);
 
-            return ResponseEntity.ok(new TokenDTO(user.getId(), accessToken, refreshTokenString));
+            return ResponseEntity.ok(new TokenDTO(accessToken, refreshTokenString));
         }
 
         throw new BadCredentialsException("invalid token");
@@ -134,7 +143,7 @@ public class AuthenticationController {
             String accessToken = jwtHelper.generateAccessToken(user);
             String newRefreshTokenString = jwtHelper.generateRefreshToken(user, refreshToken);
 
-            return ResponseEntity.ok(new TokenDTO(user.getId(), accessToken, newRefreshTokenString));
+            return ResponseEntity.ok(new TokenDTO(accessToken, newRefreshTokenString));
         }
 
         throw new BadCredentialsException("invalid token");

@@ -2,10 +2,8 @@ package com.puccampinas.backendp5noname.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.puccampinas.backendp5noname.dtos.RegistrationDataDTO;
 import com.puccampinas.backendp5noname.dtos.SignupDTO;
 import lombok.*;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -34,6 +32,12 @@ public class User implements UserDetails {
     @NonNull
     private String password;
     @NonNull
+    private String fullName;
+    @NonNull
+    private String document;
+    @NonNull
+    private double weight;
+    @NonNull
     private StatusUser status;
     @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
     private LocalDateTime createdAt;
@@ -41,8 +45,11 @@ public class User implements UserDetails {
     private LocalDateTime updatedAt;
 
     public User(SignupDTO userDTO, String password) {
-        this.login = userDTO.getLogin();
+        this.login = userDTO.getEmail();
         this.password = password;
+        this.document = userDTO.getDocument();
+        this.weight = Double.parseDouble(userDTO.getWeight());
+        this.fullName = userDTO.getFullName();
         this.status = StatusUser.ATIVO;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();

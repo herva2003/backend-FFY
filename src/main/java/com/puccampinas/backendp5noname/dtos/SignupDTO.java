@@ -11,8 +11,14 @@ import lombok.Setter;
 public class SignupDTO {
     @NotBlank
     @Size(min = 3, max = 30)
-    private String login;
+    private String email;
     @NotBlank
     @Size(min = 6, max = 60)
     private String password;
+    @NotBlank
+    private String document;
+    @NotBlank
+    private String fullName;
+    @NotBlank
+    private String weight;
 }
