@@ -7,11 +7,13 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,6 +41,10 @@ public class User implements UserDetails {
     private double weight;
     @NonNull
     private StatusUser status;
+
+    @DocumentReference
+    private List<Ingredient> ingredients;
+
     @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
     private LocalDateTime createdAt;
     @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
@@ -51,6 +57,7 @@ public class User implements UserDetails {
         this.weight = Double.parseDouble(userDTO.getWeight());
         this.fullName = userDTO.getFullName();
         this.status = StatusUser.ATIVO;
+        this.ingredients = new ArrayList<>();
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
