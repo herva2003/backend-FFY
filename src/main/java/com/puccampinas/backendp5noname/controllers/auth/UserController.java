@@ -9,6 +9,7 @@ import com.puccampinas.backendp5noname.services.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -49,9 +50,12 @@ public class UserController {
     }
 
     @DeleteMapping("/ingredient/{id}")
-    public ResponseEntity<Void> deleteIngredient(@AuthenticationPrincipal User user, @PathVariable String id) {
-        this.userService.deleteIngredientFromUser(user, id);
+    public ResponseEntity<Void> deleteIngredient(@AuthenticationPrincipal User user, @PathVariable String id) throws ChangeSetPersister.NotFoundException {
+        User existingUser = userService.existUser(user);
+        if (existingUser == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        userService.deleteIngredientFromUser(user, id);
         return ResponseEntity.noContent().build();
     }
+
 
 }

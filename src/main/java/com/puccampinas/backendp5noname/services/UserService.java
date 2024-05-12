@@ -8,6 +8,7 @@ import com.puccampinas.backendp5noname.repositories.RefreshTokenRepository;
 import com.puccampinas.backendp5noname.repositories.UserRepository;
 import com.puccampinas.backendp5noname.services.auth.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -71,18 +72,17 @@ public class UserService implements UserDetailsService {
         return user.getIngredients();
     }
 
-    public void deleteIngredientFromUser(User user, String ingredientId) {
-        User existingUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public void deleteIngredientFromUser(User user, String ingredientId) throws ChangeSetPersister.NotFoundException {
 
-        List<Ingredient> userIngredients = existingUser.getIngredients();
+
+        List<Ingredient> userIngredients = user.getIngredients();
         boolean removed = userIngredients.removeIf(ingredient -> ingredient.getId().equals(ingredientId));
 
         if (!removed) {
-            throw new RuntimeException("Ingredient not found in user");
+            throw new ChangeSetPersister.NotFoundException();
         }
 
-        userRepository.save(existingUser);
+        userRepository.save(user);
     }
 
 }
