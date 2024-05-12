@@ -4,6 +4,7 @@ import com.puccampinas.backendp5noname.domain.Ingredient;
 import com.puccampinas.backendp5noname.domain.User;
 import com.puccampinas.backendp5noname.domain.vo.IngredientVO;
 import com.puccampinas.backendp5noname.dtos.ApiResponse;
+import com.puccampinas.backendp5noname.dtos.IngredientIDDTO;
 import com.puccampinas.backendp5noname.dtos.ListApiResponse;
 import com.puccampinas.backendp5noname.services.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -54,6 +55,14 @@ public class UserController {
         User existingUser = userService.existUser(user);
         if (existingUser == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         userService.deleteIngredientFromUser(user, id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/ingredient/")
+    public ResponseEntity<Void> deleteListIngredient(@AuthenticationPrincipal User user, @RequestBody List<IngredientIDDTO> ids) throws ChangeSetPersister.NotFoundException {
+        User existingUser = userService.existUser(user);
+        if (existingUser == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        userService.deleteIngredientsFromUser(user, ids);
         return ResponseEntity.noContent().build();
     }
 
