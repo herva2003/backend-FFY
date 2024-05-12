@@ -45,7 +45,7 @@ public class TokenService {
                 .withIssuer(issuer)
                 .withSubject(user.getId())
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(new Date().getTime() + accessTokenExpirationMs))
+               // .withExpiresAt(new Date(new Date().getTime() + accessTokenExpirationMs))
                 .sign(accessTokenAlgorithm);
     }
 
@@ -55,7 +55,7 @@ public class TokenService {
                 .withSubject(user.getId())
                 .withClaim("tokenId", refreshToken.getId())
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date((new Date()).getTime() + refreshTokenExpirationMs))
+              //  .withExpiresAt(new Date((new Date()).getTime() + refreshTokenExpirationMs))
                 .sign(refreshTokenAlgorithm);
     }
 
