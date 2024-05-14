@@ -5,6 +5,7 @@ import com.puccampinas.backendp5noname.domain.Ingredient;
 import com.puccampinas.backendp5noname.domain.User;
 import com.puccampinas.backendp5noname.domain.vo.IngredientVO;
 import com.puccampinas.backendp5noname.dtos.IngredientIDDTO;
+import com.puccampinas.backendp5noname.dtos.UserUpdateDTO;
 import com.puccampinas.backendp5noname.repositories.RefreshTokenRepository;
 import com.puccampinas.backendp5noname.repositories.UserRepository;
 import com.puccampinas.backendp5noname.services.auth.TokenService;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,6 +88,15 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    public UserUpdateDTO updateUser(User user, UserUpdateDTO userUpdateDTO) {
+        user.setLogin(userUpdateDTO.login());
+        user.setDocument(userUpdateDTO.document());
+        user.setFullName(userUpdateDTO.fullName());
+        user.setWeight(userUpdateDTO.weight());
+        this.userRepository.save(user);
+        return userUpdateDTO;
+    }
+
     public void deleteIngredientsFromUser(User user, List<IngredientIDDTO> ingredientIds)  {
         List<Ingredient> userIngredients = user.getIngredients();
 
@@ -104,6 +115,12 @@ public class UserService implements UserDetailsService {
                 });
 
         userRepository.save(user);
+    }
+
+    public boolean isExistingEmailFromUser(String email, User user){
+        Optional<User> userQuery = this.userRepository.findByLogin(email);
+        return userQuery.isPresent() && !userQuery.get().getId().equals(user.getId());
+
     }
 
 }

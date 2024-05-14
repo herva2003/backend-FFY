@@ -6,6 +6,7 @@ import com.puccampinas.backendp5noname.domain.vo.IngredientVO;
 import com.puccampinas.backendp5noname.dtos.ApiResponse;
 import com.puccampinas.backendp5noname.dtos.IngredientIDDTO;
 import com.puccampinas.backendp5noname.dtos.ListApiResponse;
+import com.puccampinas.backendp5noname.dtos.UserUpdateDTO;
 import com.puccampinas.backendp5noname.services.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.Getter;
@@ -34,6 +35,7 @@ public class UserController {
     }
 
 
+
     @PostMapping("/ingredient")
     public ResponseEntity<ListApiResponse<IngredientVO>>
     addIngredient(@AuthenticationPrincipal User user,
@@ -48,6 +50,15 @@ public class UserController {
         List<Ingredient> userIngredients = this.userService.ingredientsFromUser(user);
         ListApiResponse<Ingredient> response = new ListApiResponse<>(HttpStatus.OK, "User Ingredients", userIngredients);
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/")
+    public ResponseEntity<ApiResponse<UserUpdateDTO>> updateUser(@AuthenticationPrincipal User user, @RequestBody UserUpdateDTO data) {
+        User existingUser = this.userService.existUser(user);
+        if( existingUser == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if(userService.isExistingEmailFromUser(data.login(), existingUser))  return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        UserUpdateDTO updateData = this.userService.updateUser(user, data);
+        return  ResponseEntity.ok(new ApiResponse<UserUpdateDTO>(HttpStatus.OK, "updated data from user",updateData));
     }
 
     @DeleteMapping("/ingredient/{id}")
