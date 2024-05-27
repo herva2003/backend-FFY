@@ -48,8 +48,8 @@ public class WebSecurityConfig {
         return http.csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers( "/api/auth/**").permitAll();
-                    req.requestMatchers( "/api/ingredient/**").permitAll();
+                    req.requestMatchers( "/api/v1/auth/**").permitAll();
+                    req.requestMatchers( "/api/v1/ingredient/**").permitAll();
                     req.requestMatchers( "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
                     req.anyRequest().authenticated();
                 })
