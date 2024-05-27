@@ -98,7 +98,7 @@ public class AuthenticationController {
         throw new BadCredentialsException("invalid token");
     }
 
-    @PostMapping("logout-all")
+    @PostMapping("/logout-all")
     public ResponseEntity<?> logoutAll(@RequestBody TokenDTO dto) {
         String refreshTokenString = dto.getRefreshToken();
         if (jwtHelper.validateRefreshToken(refreshTokenString) && refreshTokenRepository.existsById(jwtHelper.getTokenIdFromRefreshToken(refreshTokenString))) {

@@ -10,8 +10,8 @@ import lombok.*;
 @ToString
 @Data
 public class IngredientVO {
-    String id;
     String name;
+    String id;
 
 
     public IngredientVO(Ingredient ingredient){
