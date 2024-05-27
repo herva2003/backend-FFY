@@ -45,6 +45,10 @@ public class User implements UserDetails {
     @DocumentReference
     private List<Ingredient> ingredients;
 
+
+    @DocumentReference
+    private List<Recipe> recipes;
+
     @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
     private LocalDateTime createdAt;
     @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
@@ -58,6 +62,7 @@ public class User implements UserDetails {
         this.fullName = userDTO.getFullName();
         this.status = StatusUser.ATIVO;
         this.ingredients = new ArrayList<>();
+        this.recipes = new ArrayList<>();
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }

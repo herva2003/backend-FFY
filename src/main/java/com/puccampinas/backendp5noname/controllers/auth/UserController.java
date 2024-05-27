@@ -1,12 +1,10 @@
 package com.puccampinas.backendp5noname.controllers.auth;
 
 import com.puccampinas.backendp5noname.domain.Ingredient;
+import com.puccampinas.backendp5noname.domain.Recipe;
 import com.puccampinas.backendp5noname.domain.User;
 import com.puccampinas.backendp5noname.domain.vo.IngredientVO;
-import com.puccampinas.backendp5noname.dtos.ApiResponse;
-import com.puccampinas.backendp5noname.dtos.IngredientIDDTO;
-import com.puccampinas.backendp5noname.dtos.ListApiResponse;
-import com.puccampinas.backendp5noname.dtos.UserUpdateDTO;
+import com.puccampinas.backendp5noname.dtos.*;
 import com.puccampinas.backendp5noname.services.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.Getter;
@@ -52,6 +50,13 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/recipe")
+    public ResponseEntity<ListApiResponse<Recipe>> myRecipes(@AuthenticationPrincipal User user) {
+        List<Recipe> userRecipes = this.userService.recipesFromUser(user);
+        ListApiResponse<Recipe> response = new ListApiResponse<>(HttpStatus.OK, "User Recipes", userRecipes);
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("/")
     public ResponseEntity<ApiResponse<UserUpdateDTO>> updateUser(@AuthenticationPrincipal User user, @RequestBody UserUpdateDTO data) {
         User existingUser = this.userService.existUser(user);
@@ -76,6 +81,25 @@ public class UserController {
         userService.deleteIngredientsFromUser(user, ids);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/recipe")
+    public ResponseEntity<ApiResponse<RecipeDTO>> updateUser(@AuthenticationPrincipal User user, @RequestBody RecipeDTO data) {
+        User existingUser = this.userService.existUser(user);
+        if( existingUser == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        RecipeDTO recipe = this.userService.addRecipeToUser(user, data);
+        return  ResponseEntity.ok(new ApiResponse<RecipeDTO>(HttpStatus.OK, "add recipe in user",recipe));
+    }
+
+    @DeleteMapping("/recipe/{recipeId}")
+    public ResponseEntity<Void> deleteRecipeFromUser(@AuthenticationPrincipal User user, @PathVariable String recipeId) {
+        User existingUser = userService.existUser(user);
+        if (existingUser == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        userService.deleteRecipeFromUser(user, recipeId);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
 
 
 }

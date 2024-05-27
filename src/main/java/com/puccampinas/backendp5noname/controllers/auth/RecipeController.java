@@ -3,6 +3,7 @@ package com.puccampinas.backendp5noname.controllers.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.puccampinas.backendp5noname.domain.Recipe;
+import com.puccampinas.backendp5noname.dtos.RecipeDTO;
 import com.puccampinas.backendp5noname.dtos.RecipeInfoDTO;
 import com.puccampinas.backendp5noname.services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class RecipeController {
 
 
     @PostMapping("/generate")
-    public Recipe generateRecipe(@RequestBody RecipeInfoDTO data) throws JsonProcessingException {
+    public RecipeDTO generateRecipe(@RequestBody RecipeInfoDTO data) throws JsonProcessingException {
         return recipeService.generateRecipe(data);
     }
 }

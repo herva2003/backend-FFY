@@ -5,7 +5,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puccampinas.backendp5noname.domain.Recipe;
+import com.puccampinas.backendp5noname.dtos.RecipeDTO;
 import com.puccampinas.backendp5noname.dtos.RecipeInfoDTO;
+import com.puccampinas.backendp5noname.repositories.RecipeRepository;
 import org.springframework.ai.chat.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatClient;
@@ -19,9 +21,18 @@ public class RecipeService {
     @Autowired
     private OpenAiChatClient chatClient;
     @Autowired
-    private ObjectMapper objectMapper; // Injetando o ObjectMapper para desserialização JSON
+    private ObjectMapper objectMapper;
 
-    public Recipe generateRecipe(RecipeInfoDTO data) throws JsonProcessingException {
+    @Autowired
+    private RecipeRepository recipeRepository;
+
+
+
+    public Recipe addRecipe(Recipe recipe) {
+        return recipeRepository.save(recipe);
+    }
+
+    public RecipeDTO generateRecipe(RecipeInfoDTO data) throws JsonProcessingException {
         String content = "Você é um assistente de culinária profissional. Crie receitas usando apenas os ingredientes fornecidos. "
                 + "Não adicione ingredientes extras. Não é obrigatório usar todos os ingredientes.\n"
                 + "Crie 1 receita em inglês, considerando as seguintes informações:\n"
@@ -34,7 +45,6 @@ public class RecipeService {
                 + "Cada objeto de receita deve conter os campos:\n"
                 + " - 'name': String\n"
                 + " - 'ingredients': Lista de strings\n"
-                + " - 'ingredientQuantities': Lista de doubles\n"
                 + " - 'preparationMethod': Lista de strings\n"
                 + " - 'preparationTime': Double\n"
                 + "Os ingredientes devem ser listados com o nome exato fornecido e as quantidades "
@@ -60,9 +70,8 @@ public class RecipeService {
 
         String recipeContent = jsonNode.get("recipes").get(0).toString();
 
-        Recipe recipe = objectMapper.readValue(recipeContent, Recipe.class);
+        RecipeDTO recipe = objectMapper.readValue(recipeContent, RecipeDTO.class);
 
-        System.out.println(recipe);
 
         return recipe;
     }

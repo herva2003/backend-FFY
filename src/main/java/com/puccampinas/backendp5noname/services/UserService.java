@@ -2,9 +2,11 @@ package com.puccampinas.backendp5noname.services;
 
 
 import com.puccampinas.backendp5noname.domain.Ingredient;
+import com.puccampinas.backendp5noname.domain.Recipe;
 import com.puccampinas.backendp5noname.domain.User;
 import com.puccampinas.backendp5noname.domain.vo.IngredientVO;
 import com.puccampinas.backendp5noname.dtos.IngredientIDDTO;
+import com.puccampinas.backendp5noname.dtos.RecipeDTO;
 import com.puccampinas.backendp5noname.dtos.UserUpdateDTO;
 import com.puccampinas.backendp5noname.repositories.RefreshTokenRepository;
 import com.puccampinas.backendp5noname.repositories.UserRepository;
@@ -35,6 +37,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private IngredientService ingredientService;
+
+    @Autowired
+    private RecipeService recipeService;
 
 
 
@@ -71,9 +76,28 @@ public class UserService implements UserDetailsService {
         return ingredientsVO;
     }
 
+    public void deleteRecipeFromUser(User user, String recipeId) {
+        List<Recipe> userRecipes = user.getRecipes();
+        userRecipes.removeIf(recipe -> recipe.getId().equals(recipeId));
+        userRepository.save(user);
+    }
+    public RecipeDTO addRecipeToUser(User user, RecipeDTO data) {
+        Recipe recipe = new Recipe(data);
+        recipeService.addRecipe(recipe);
+        user.getRecipes().add(recipe);
+        userRepository.save(user);
+        return data;
+    }
+
     public List<Ingredient> ingredientsFromUser(User user) {
         return user.getIngredients();
     }
+
+    public List<Recipe> recipesFromUser(User user) {
+        return user.getRecipes();
+    }
+
+
 
     public void deleteIngredientFromUser(User user, String ingredientId) throws ChangeSetPersister.NotFoundException {
 
