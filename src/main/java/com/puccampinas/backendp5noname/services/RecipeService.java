@@ -15,6 +15,9 @@ import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+
 @Service
 public class RecipeService {
 
@@ -72,6 +75,7 @@ public class RecipeService {
 
         RecipeDTO recipe = objectMapper.readValue(recipeContent, RecipeDTO.class);
 
+        recipe.setGeneratedAt(LocalDateTime.now());
 
         return recipe;
     }

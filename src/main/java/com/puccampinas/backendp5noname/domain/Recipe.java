@@ -1,11 +1,14 @@
 package com.puccampinas.backendp5noname.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.puccampinas.backendp5noname.dtos.RecipeDTO;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -20,7 +23,9 @@ public class Recipe {
     private String name;
     private List<String> ingredients;
     private List<String> preparationMethod;
-    private double preparationTime;
+    private int preparationTime;
+    @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
+    private LocalDateTime createdAt;
 
 
     public Recipe(RecipeDTO data) {
@@ -28,6 +33,7 @@ public class Recipe {
         this.ingredients = data.getIngredients();
         this.preparationMethod = data.getPreparationMethod();
         this.preparationTime = data.getPreparationTime();
+        this.createdAt = LocalDateTime.now();
     }
 }
 
