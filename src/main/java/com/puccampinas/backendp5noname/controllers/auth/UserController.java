@@ -1,10 +1,12 @@
 package com.puccampinas.backendp5noname.controllers.auth;
 
 import com.puccampinas.backendp5noname.domain.Ingredient;
+import com.puccampinas.backendp5noname.domain.NutritionalValues;
 import com.puccampinas.backendp5noname.domain.Recipe;
 import com.puccampinas.backendp5noname.domain.User;
 import com.puccampinas.backendp5noname.domain.vo.IngredientVO;
 import com.puccampinas.backendp5noname.dtos.*;
+import com.puccampinas.backendp5noname.services.RecipeService;
 import com.puccampinas.backendp5noname.services.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.Getter;
@@ -25,6 +27,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RecipeService recipeService;
 
 
     @GetMapping("/me")
@@ -97,6 +102,26 @@ public class UserController {
         userService.deleteRecipeFromUser(user, recipeId);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/recipe/{id}/nv")
+    public ResponseEntity<ApiResponse<NutritionalValues>> addNutrientValuesFromRecipe(@AuthenticationPrincipal User user, @PathVariable String id, @RequestBody NutritionalValuesStringDTO data) {
+        User existingUser = this.userService.existUser(user);
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        Recipe recipe = this.recipeService.findRecipeById(id);
+        if (recipe == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        if (!existingUser.getRecipes().contains(recipe)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        NutritionalValues updatedNv = this.userService.addNutritionalValuesOnRecipe(recipe, data);
+        return ResponseEntity.ok(new ApiResponse<NutritionalValues>(HttpStatus.OK, "Recipe updated with nutrient values", updatedNv));
+    }
+
 
 
 

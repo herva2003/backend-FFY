@@ -2,10 +2,12 @@ package com.puccampinas.backendp5noname.services;
 
 
 import com.puccampinas.backendp5noname.domain.Ingredient;
+import com.puccampinas.backendp5noname.domain.NutritionalValues;
 import com.puccampinas.backendp5noname.domain.Recipe;
 import com.puccampinas.backendp5noname.domain.User;
 import com.puccampinas.backendp5noname.domain.vo.IngredientVO;
 import com.puccampinas.backendp5noname.dtos.IngredientIDDTO;
+import com.puccampinas.backendp5noname.dtos.NutritionalValuesStringDTO;
 import com.puccampinas.backendp5noname.dtos.RecipeDTO;
 import com.puccampinas.backendp5noname.dtos.UserUpdateDTO;
 import com.puccampinas.backendp5noname.repositories.RefreshTokenRepository;
@@ -40,6 +42,10 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private RecipeService recipeService;
+
+    @Autowired
+    private NutritionalValuesService nutritionalValuesService;
+
 
 
 
@@ -145,6 +151,15 @@ public class UserService implements UserDetailsService {
         Optional<User> userQuery = this.userRepository.findByLogin(email);
         return userQuery.isPresent() && !userQuery.get().getId().equals(user.getId());
 
+    }
+
+
+
+    public NutritionalValues addNutritionalValuesOnRecipe(Recipe recipe, NutritionalValuesStringDTO data) {
+        NutritionalValues nutritionalValues = this.nutritionalValuesService.saveNutritionalValues(data);
+        recipe.setNutritionalValues(nutritionalValues);
+        recipeService.saveRecipe(recipe);
+        return nutritionalValues;
     }
 
 }

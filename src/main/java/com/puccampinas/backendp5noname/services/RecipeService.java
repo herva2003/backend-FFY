@@ -80,6 +80,17 @@ public class RecipeService {
         return recipe;
     }
 
+    public Recipe singleRecipe(String id) {
+       return this.recipeRepository.findById(id).orElse(null);
+    }
+
+    public Recipe saveRecipe(Recipe recipe) {
+        return this.recipeRepository.save(recipe);
+    }
+
+    public Recipe findRecipeById(String id){
+        return this.recipeRepository.findById(id).orElse(null);
+    }
 
 
 }
