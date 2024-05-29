@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -28,7 +29,7 @@ public class Recipe {
     @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
     private LocalDateTime createdAt;
     @DocumentReference
-    private NutritionalValues nutritionalValues;
+    private List<NutritionalValues> nutritionalValues;
 
 
     public Recipe(RecipeDTO data) {
@@ -37,7 +38,7 @@ public class Recipe {
         this.preparationMethod = data.getPreparationMethod();
         this.preparationTime = data.getPreparationTime();
         this.createdAt = LocalDateTime.now();
-        this.nutritionalValues = null;
+        this.nutritionalValues = new ArrayList<>();
     }
 }
 

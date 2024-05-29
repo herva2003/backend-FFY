@@ -157,7 +157,9 @@ public class UserService implements UserDetailsService {
 
     public NutritionalValues addNutritionalValuesOnRecipe(Recipe recipe, NutritionalValuesStringDTO data) {
         NutritionalValues nutritionalValues = this.nutritionalValuesService.saveNutritionalValues(data);
-        recipe.setNutritionalValues(nutritionalValues);
+        List<NutritionalValues> list = recipe.getNutritionalValues();
+        list.add(nutritionalValues);
+        recipe.setNutritionalValues(list);
         recipeService.saveRecipe(recipe);
         return nutritionalValues;
     }

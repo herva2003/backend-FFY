@@ -1,0 +1,44 @@
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Calcium (mg)</th>
+        <th>Copper (mcg)</th>
+        <th>Iron (mg)</th>
+        <th>Magnesium (mg)</th>
+        <th>Manganese (mg)</th>
+        <th>Niacin (mg)</th>
+        <th>Phosphorus (mg)</th>
+        <th>Potassium (mg)</th>
+        <th>Riboflavin (mg)</th>
+        <th>Selenium (mcg)</th>
+        <th>Sodium (mg)</th>
+        <th>Thiamin (mg)</th>
+        <th>Vitamin B6 (mg)</th>
+        <th>Zinc (mg)</th>
+        <th>Vitamin E (mg)</th>
+        <th>Done At</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="nutritionalValue : ${nutritionalValues}">
+        <td th:text="${nutritionalValue.id}"></td>
+        <td th:text="${nutritionalValue.Calcium_mg}"></td>
+        <td th:text="${nutritionalValue.Copper_mcg}"></td>
+        <td th:text="${nutritionalValue.Iron_mg}"></td>
+        <td th:text="${nutritionalValue.Magnesium_mg}"></td>
+        <td th:text="${nutritionalValue.Manganese_mg}"></td>
+        <td th:text="${nutritionalValue.Niacin_mg}"></td>
+        <td th:text="${nutritionalValue.Phosphorus_mg}"></td>
+        <td th:text="${nutritionalValue.Potassium_mg}"></td>
+        <td th:text="${nutritionalValue.Riboflavin_mg}"></td>
+        <td th:text="${nutritionalValue.Selenium_mcg}"></td>
+        <td th:text="${nutritionalValue.Sodium_mg}"></td>
+        <td th:text="${nutritionalValue.Thiamin_mg}"></td>
+        <td th:text="${nutritionalValue.VitB6_mg}"></td>
+        <td th:text="${nutritionalValue.Zinc_mg}"></td>
+        <td th:text="${nutritionalValue.VitE_mg}"></td>
+        <td th:text="${nutritionalValue.doneAt}"></td>
+    </tr>
+    </tbody>
+</table>

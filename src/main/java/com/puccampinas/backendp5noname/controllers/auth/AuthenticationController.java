@@ -21,10 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -43,6 +40,7 @@ public class AuthenticationController {
     UserService userService;
     @Autowired
     private TokenService tokenService;
+
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<TokenDTO>>  login(@Valid @RequestBody LoginDTO dto) {
@@ -148,4 +146,5 @@ public class AuthenticationController {
 
         throw new BadCredentialsException("invalid token");
     }
+
 }
