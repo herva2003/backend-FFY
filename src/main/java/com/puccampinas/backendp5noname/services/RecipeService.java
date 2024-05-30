@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puccampinas.backendp5noname.domain.Recipe;
+import com.puccampinas.backendp5noname.domain.User;
 import com.puccampinas.backendp5noname.dtos.RecipeDTO;
 import com.puccampinas.backendp5noname.dtos.RecipeInfoDTO;
 import com.puccampinas.backendp5noname.repositories.RecipeRepository;
@@ -35,11 +36,11 @@ public class RecipeService {
         return recipeRepository.save(recipe);
     }
 
-    public RecipeDTO generateRecipe(RecipeInfoDTO data) throws JsonProcessingException {
+    public RecipeDTO generateRecipe(RecipeInfoDTO data, User user) throws JsonProcessingException {
         String content = String.format("Você é um assistente de culinária profissional. Crie receitas usando apenas os ingredientes fornecidos. "
                 + "Não adicione ingredientes extras. Não é obrigatório usar todos os ingredientes.\n"
                 + "Crie 1 receita em inglês, considerando as seguintes informações:\n"
-                + "- Ingredientes disponíveis: \n"
+                + "- Ingredientes disponíveis:" + user.getIngredients() + "\n"
                 + "- Restrições alimentares: \n"
                 + "- Tipo de refeição: " + data.type() + "\n"
                 + "- Observações: " + data.observation() + "\n"
