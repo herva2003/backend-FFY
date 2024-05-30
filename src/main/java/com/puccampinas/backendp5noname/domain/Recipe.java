@@ -23,7 +23,8 @@ public class Recipe {
     @Id
     private String id;
     private String name;
-    private List<String> ingredients;
+    @DocumentReference
+    private List<IngredientRecipe> ingredients;
     private List<String> preparationMethod;
     private int preparationTime;
     @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
@@ -32,9 +33,9 @@ public class Recipe {
     private List<NutritionalValues> nutritionalValues;
 
 
-    public Recipe(RecipeDTO data) {
+    public Recipe(RecipeDTO data,List<IngredientRecipe> ingredients) {
         this.name = data.getName();
-        this.ingredients = data.getIngredients();
+        this.ingredients =  ingredients;
         this.preparationMethod = data.getPreparationMethod();
         this.preparationTime = data.getPreparationTime();
         this.createdAt = LocalDateTime.now();

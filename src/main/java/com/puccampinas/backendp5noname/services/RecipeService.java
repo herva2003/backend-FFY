@@ -36,10 +36,10 @@ public class RecipeService {
     }
 
     public RecipeDTO generateRecipe(RecipeInfoDTO data) throws JsonProcessingException {
-        String content = "Você é um assistente de culinária profissional. Crie receitas usando apenas os ingredientes fornecidos. "
+        String content = String.format("Você é um assistente de culinária profissional. Crie receitas usando apenas os ingredientes fornecidos. "
                 + "Não adicione ingredientes extras. Não é obrigatório usar todos os ingredientes.\n"
                 + "Crie 1 receita em inglês, considerando as seguintes informações:\n"
-                + "- Ingredientes disponíveis: %s\n"
+                + "- Ingredientes disponíveis: \n"
                 + "- Restrições alimentares: \n"
                 + "- Tipo de refeição: " + data.type() + "\n"
                 + "- Observações: " + data.observation() + "\n"
@@ -47,12 +47,12 @@ public class RecipeService {
                 + "em um objeto maior chamado 'recipes'.\n"
                 + "Cada objeto de receita deve conter os campos:\n"
                 + " - 'name': String\n"
-                + " - 'ingredients': Lista de strings\n"
+                + " - 'ingredients': Lista de objetos, cada objeto contendo 'name': String e 'quantity': Double (em gramas)\n"
                 + " - 'preparationMethod': Lista de strings\n"
-                + " - 'preparationTime': Double\n"
+                + " - 'preparationTime': Double (em minutos)\n"
                 + "Os ingredientes devem ser listados com o nome exato fornecido e as quantidades "
                 + "devem ser especificadas em números inteiros ou decimais, representando a quantidade em gramas, "
-                + "partindo de uma base de 100 gramas para cada ingrediente.\n";
+                + "partindo de uma base de 100 gramas para cada ingrediente.\n");
 
         ChatResponse response = chatClient.call(
                 new Prompt(
@@ -61,9 +61,8 @@ public class RecipeService {
                                 .withModel("gpt-3.5-turbo")
                                 .withTemperature(0.4F)
                                 .build()
-                ));
-
-
+                )
+        );
 
         // Obter o conteúdo da resposta JSON
         String jsonResponse = response.getResult().getOutput().getContent();

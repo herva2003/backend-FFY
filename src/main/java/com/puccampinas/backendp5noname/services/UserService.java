@@ -1,10 +1,7 @@
 package com.puccampinas.backendp5noname.services;
 
 
-import com.puccampinas.backendp5noname.domain.Ingredient;
-import com.puccampinas.backendp5noname.domain.NutritionalValues;
-import com.puccampinas.backendp5noname.domain.Recipe;
-import com.puccampinas.backendp5noname.domain.User;
+import com.puccampinas.backendp5noname.domain.*;
 import com.puccampinas.backendp5noname.domain.vo.IngredientVO;
 import com.puccampinas.backendp5noname.dtos.IngredientIDDTO;
 import com.puccampinas.backendp5noname.dtos.NutritionalValuesStringDTO;
@@ -45,6 +42,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private NutritionalValuesService nutritionalValuesService;
+
+    @Autowired
+    private IngredientRecipeService ingredientRecipeService;
 
 
 
@@ -88,7 +88,9 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
     public RecipeDTO addRecipeToUser(User user, RecipeDTO data) {
-        Recipe recipe = new Recipe(data);
+        System.out.println(2323);
+        List<IngredientRecipe> ingredients = ingredientRecipeService.convertAndSave(data.getIngredients());
+        Recipe recipe = new Recipe(data,ingredients);
         recipeService.addRecipe(recipe);
         user.getRecipes().add(recipe);
         userRepository.save(user);
