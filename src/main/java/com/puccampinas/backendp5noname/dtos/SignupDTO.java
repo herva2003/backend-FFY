@@ -16,7 +16,7 @@ public class SignupDTO {
     @Size(min = 6, max = 60)
     private String password;
     @NotBlank
-    private String document;
+    private String height;
     @NotBlank
     private String fullName;
     @NotBlank

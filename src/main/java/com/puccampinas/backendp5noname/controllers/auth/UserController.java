@@ -103,25 +103,25 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/recipe/{id}/nv")
-    public ResponseEntity<ApiResponse<NutritionalValues>> addNutrientValuesFromRecipe(@AuthenticationPrincipal User user, @PathVariable String id, @RequestBody NutritionalValuesStringDTO data) {
-        User existingUser = this.userService.existUser(user);
-        if (existingUser == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        Recipe recipe = this.recipeService.findRecipeById(id);
-        if (recipe == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        if (!existingUser.getRecipes().contains(recipe)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        NutritionalValues updatedNv = this.userService.addNutritionalValuesOnRecipe(recipe, data);
-        return ResponseEntity.ok(new ApiResponse<NutritionalValues>(HttpStatus.OK, "Recipe updated with nutrient values", updatedNv));
-    }
-
+//    @PostMapping("/recipe/{id}/nv")
+//    public ResponseEntity<ApiResponse<NutritionalValues>> addNutrientValuesFromRecipe(@AuthenticationPrincipal User user, @PathVariable String id, @RequestBody NutritionalValuesStringDTO data) {
+//        User existingUser = this.userService.existUser(user);
+//        if (existingUser == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        }
+//        Recipe recipe = this.recipeService.findRecipeById(id);
+//        if (recipe == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        }
+//
+//        if (!existingUser.getRecipes().contains(recipe)) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+//
+//        NutritionalValues updatedNv = this.userService.addNutritionalValuesOnRecipe(recipe, data);
+//        return ResponseEntity.ok(new ApiResponse<NutritionalValues>(HttpStatus.OK, "Recipe updated with nutrient values", updatedNv));
+//    }
+//
 
 
 

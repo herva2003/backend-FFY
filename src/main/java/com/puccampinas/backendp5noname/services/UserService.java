@@ -122,7 +122,7 @@ public class UserService implements UserDetailsService {
 
     public UserUpdateDTO updateUser(User user, UserUpdateDTO userUpdateDTO) {
         user.setLogin(userUpdateDTO.login());
-        user.setDocument(userUpdateDTO.document());
+        user.setHeight(userUpdateDTO.height());
         user.setFullName(userUpdateDTO.fullName());
         user.setWeight(userUpdateDTO.weight());
         this.userRepository.save(user);
@@ -157,13 +157,13 @@ public class UserService implements UserDetailsService {
 
 
 
-    public NutritionalValues addNutritionalValuesOnRecipe(Recipe recipe, NutritionalValuesStringDTO data) {
-        NutritionalValues nutritionalValues = this.nutritionalValuesService.saveNutritionalValues(data);
-        List<NutritionalValues> list = recipe.getNutritionalValues();
-        list.add(nutritionalValues);
-        recipe.setNutritionalValues(list);
-        recipeService.saveRecipe(recipe);
-        return nutritionalValues;
-    }
+//    public NutritionalValues addNutritionalValuesOnRecipe(Recipe recipe, NutritionalValuesStringDTO data) {
+//        NutritionalValues nutritionalValues = this.nutritionalValuesService.saveNutritionalValues(data);
+//        List<NutritionalValues> list = recipe.getNutritionalValues();
+//        list.add(nutritionalValues);
+//        recipe.setNutritionalValues(list);
+//        recipeService.saveRecipe(recipe);
+//        return nutritionalValues;
+//    }
 
 }

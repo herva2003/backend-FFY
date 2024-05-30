@@ -36,9 +36,9 @@ public class User implements UserDetails {
     @NonNull
     private String fullName;
     @NonNull
-    private String document;
+    private Double height;
     @NonNull
-    private double weight;
+    private Double weight;
     @NonNull
     private StatusUser status;
 
@@ -57,7 +57,7 @@ public class User implements UserDetails {
     public User(SignupDTO userDTO, String password) {
         this.login = userDTO.getEmail();
         this.password = password;
-        this.document = userDTO.getDocument();
+        this.height = Double.parseDouble(userDTO.getHeight());
         this.weight = Double.parseDouble(userDTO.getWeight());
         this.fullName = userDTO.getFullName();
         this.status = StatusUser.ATIVO;
