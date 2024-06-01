@@ -1,5 +1,6 @@
 package com.puccampinas.backendp5noname.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.puccampinas.backendp5noname.dtos.NutritionalValuesDoubleDTO;
 import com.puccampinas.backendp5noname.dtos.NutritionalValuesStringDTO;
 import com.puccampinas.backendp5noname.dtos.NutritionalValuesUserDoubleDTO;
@@ -9,6 +10,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -46,7 +48,8 @@ public class NutritionalValuesUser {
     private Double VitA_mcg;
     private Double VitE_mg;
     private Double VitD2_mcg;
-    private Instant createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+    private LocalDateTime createdAt;
 
     public NutritionalValuesUser(NutritionalValuesUserDoubleDTO data) {
         this.Energy_kcal = data.Energy_kcal();
@@ -76,7 +79,7 @@ public class NutritionalValuesUser {
         this.VitA_mcg = data.VitA_mcg();
         this.VitE_mg = data.VitE_mg();
         this.VitD2_mcg = data.VitD2_mcg();
-        this.createdAt = Instant.now();
+        this.createdAt = LocalDateTime.now();
     }
 
     public NutritionalValuesUser(NutritionalValuesUserStringDTO data) {
@@ -107,7 +110,7 @@ public class NutritionalValuesUser {
         this.VitA_mcg = parseDouble(data.VitA_mcg());
         this.VitE_mg = parseDouble(data.VitE_mg());
         this.VitD2_mcg = parseDouble(data.VitD2_mcg());
-        this.createdAt = Instant.now();
+        this.createdAt = LocalDateTime.now();
     }
 
     private Double parseDouble(String value) {

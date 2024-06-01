@@ -3,6 +3,7 @@ package com.puccampinas.backendp5noname.services;
 import com.puccampinas.backendp5noname.domain.NutritionalValues;
 import com.puccampinas.backendp5noname.domain.NutritionalValuesUser;
 import com.puccampinas.backendp5noname.dtos.NutritionalValuesStringDTO;
+import com.puccampinas.backendp5noname.dtos.NutritionalValuesUserDoubleDTO;
 import com.puccampinas.backendp5noname.dtos.NutritionalValuesUserStringDTO;
 import com.puccampinas.backendp5noname.repositories.NutritionalValuesUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class NutritionalValuesUserService {
     private NutritionalValuesUserRepository nutritionalValuesUserRepository;
 
 
-    public NutritionalValuesUser saveNutritionalValuesUser(NutritionalValuesUserStringDTO data) {
+    public NutritionalValuesUser saveNutritionalValuesUser(NutritionalValuesUserDoubleDTO data) {
         return nutritionalValuesUserRepository.save(new NutritionalValuesUser(data));
     }
 

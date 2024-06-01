@@ -16,4 +16,8 @@ public record NutritionalValuesDoubleDTO(
         Double VitB6_mg,
         Double Zinc_mg,
         Double VitE_mg
+
+
+
+
 ) {}

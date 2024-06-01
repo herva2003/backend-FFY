@@ -52,6 +52,14 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+
+    @GetMapping("/nv")
+    public ResponseEntity<ListApiResponse<NutritionalValuesUser>> nutritionalValuesFromUser(@AuthenticationPrincipal User user) {
+        List<NutritionalValuesUser> userNv = this.userService.nutritionalValuesFromUser(user);
+        ListApiResponse<NutritionalValuesUser> response = new ListApiResponse<>(HttpStatus.OK, "User nutritional Values", userNv);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/recipe")
     public ResponseEntity<ListApiResponse<Recipe>> myRecipes(@AuthenticationPrincipal User user) {
         List<Recipe> userRecipes = this.userService.recipesFromUser(user);
@@ -101,7 +109,9 @@ public class UserController {
     }
 
     @PostMapping("/nv/")
-    public ResponseEntity<ApiResponse<NutritionalValuesUser>> addNutrientValuesFromRecipe(@AuthenticationPrincipal User user, @RequestBody NutritionalValuesUserStringDTO data) {
+    public ResponseEntity<ApiResponse<NutritionalValuesUser>> addNutrientValuesFromRecipe(@AuthenticationPrincipal User user, @RequestBody NutritionalValuesUserDoubleDTO data) {
+
+        System.out.println(data);
         User existingUser = this.userService.existUser(user);
         if (existingUser == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

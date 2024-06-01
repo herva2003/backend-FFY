@@ -98,6 +98,11 @@ public class UserService implements UserDetailsService {
         return user.getIngredients();
     }
 
+    public List<NutritionalValuesUser> nutritionalValuesFromUser(User user) {
+        return user.getNutritionalValuesUser();
+    }
+
+
     public List<Recipe> recipesFromUser(User user) {
         return user.getRecipes();
     }
@@ -157,7 +162,7 @@ public class UserService implements UserDetailsService {
 
 
 
-    public NutritionalValuesUser addNutritionalValuesInUser(User user, NutritionalValuesUserStringDTO data) {
+    public NutritionalValuesUser addNutritionalValuesInUser(User user, NutritionalValuesUserDoubleDTO data) {
        NutritionalValuesUser nutritionalValues = this.nutritionalValuesUserService.saveNutritionalValuesUser(data);
        List<NutritionalValuesUser> list = user.getNutritionalValuesUser();
        list.add(nutritionalValues);
