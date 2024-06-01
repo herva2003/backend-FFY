@@ -41,7 +41,7 @@ public class RecipeService {
                 + "Não adicione ingredientes extras. Não é obrigatório usar todos os ingredientes.\n"
                 + "Crie 1 receita em inglês, considerando as seguintes informações:\n"
                 + "- Ingredientes disponíveis:" + user.getIngredients() + "\n"
-                + "- Restrições alimentares: \n"
+                + "- Restrições alimentares:" + user.getDiets() + "" + user.getAllergies() +  "" + user.getIntolerances() + "\n"
                 + "- Tipo de refeição: " + data.type() + "\n"
                 + "- Observações: " + data.observation() + "\n"
                 + "Apresente as receitas em formato JSON, sem comentários. Agrupe os objetos JSON de cada receita "
