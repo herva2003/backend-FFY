@@ -3,10 +3,7 @@ package com.puccampinas.backendp5noname.services;
 
 import com.puccampinas.backendp5noname.domain.*;
 import com.puccampinas.backendp5noname.domain.vo.IngredientVO;
-import com.puccampinas.backendp5noname.dtos.IngredientIDDTO;
-import com.puccampinas.backendp5noname.dtos.NutritionalValuesStringDTO;
-import com.puccampinas.backendp5noname.dtos.RecipeDTO;
-import com.puccampinas.backendp5noname.dtos.UserUpdateDTO;
+import com.puccampinas.backendp5noname.dtos.*;
 import com.puccampinas.backendp5noname.repositories.RefreshTokenRepository;
 import com.puccampinas.backendp5noname.repositories.UserRepository;
 import com.puccampinas.backendp5noname.services.auth.TokenService;
@@ -41,7 +38,7 @@ public class UserService implements UserDetailsService {
     private RecipeService recipeService;
 
     @Autowired
-    private NutritionalValuesService nutritionalValuesService;
+    private NutritionalValuesUserService nutritionalValuesUserService;
 
     @Autowired
     private IngredientRecipeService ingredientRecipeService;
@@ -125,6 +122,9 @@ public class UserService implements UserDetailsService {
         user.setHeight(userUpdateDTO.height());
         user.setFullName(userUpdateDTO.fullName());
         user.setWeight(userUpdateDTO.weight());
+        user.setDiets(userUpdateDTO.diets());
+        user.setIntolerances(userUpdateDTO.intolerances());
+        user.setAllergies(userUpdateDTO.allergies());
         this.userRepository.save(user);
         return userUpdateDTO;
     }
@@ -157,13 +157,13 @@ public class UserService implements UserDetailsService {
 
 
 
-//    public NutritionalValues addNutritionalValuesOnRecipe(Recipe recipe, NutritionalValuesStringDTO data) {
-//        NutritionalValues nutritionalValues = this.nutritionalValuesService.saveNutritionalValues(data);
-//        List<NutritionalValues> list = recipe.getNutritionalValues();
-//        list.add(nutritionalValues);
-//        recipe.setNutritionalValues(list);
-//        recipeService.saveRecipe(recipe);
-//        return nutritionalValues;
-//    }
+    public NutritionalValuesUser addNutritionalValuesInUser(User user, NutritionalValuesUserStringDTO data) {
+       NutritionalValuesUser nutritionalValues = this.nutritionalValuesUserService.saveNutritionalValuesUser(data);
+       List<NutritionalValuesUser> list = user.getNutritionalValuesUser();
+       list.add(nutritionalValues);
+        user.setNutritionalValuesUser(list);
+        this.userRepository.save(user);
+       return nutritionalValues;
+    }
 
 }

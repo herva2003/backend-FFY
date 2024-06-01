@@ -1,0 +1,31 @@
+package com.puccampinas.backendp5noname.dtos;
+
+public record NutritionalValuesUserStringDTO(
+        String Energy_kcal,
+        String Protein_g,
+        String Saturated_fats_g,
+        String Fat_g,
+        String Carb_g,
+        String Fiber_g,
+        String Sugar_g,
+        String Calcium_mg,
+        String Iron_mg,
+        String Magnesium_mg,
+        String Phosphorus_mg,
+        String Potassium_mg,
+        String Sodium_mg,
+        String Zinc_mg,
+        String Copper_mcg,
+        String Manganese_mg,
+        String Selenium_mcg,
+        String VitC_mg,
+        String Thiamin_mg,
+        String Riboflavin_mg,
+        String Niacin_mg,
+        String VitB6_mg,
+        String Folate_mcg,
+        String VitB12_mcg,
+        String VitA_mcg,
+        String VitE_mg,
+        String VitD2_mcg
+) {}

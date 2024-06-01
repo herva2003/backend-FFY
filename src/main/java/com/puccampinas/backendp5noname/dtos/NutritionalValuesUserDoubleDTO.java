@@ -1,0 +1,31 @@
+package com.puccampinas.backendp5noname.dtos;
+
+public record NutritionalValuesUserDoubleDTO(
+        Double Energy_kcal,
+        Double Protein_g,
+        Double Saturated_fats_g,
+        Double Fat_g,
+        Double Carb_g,
+        Double Fiber_g,
+        Double Sugar_g,
+        Double Calcium_mg,
+        Double Iron_mg,
+        Double Magnesium_mg,
+        Double Phosphorus_mg,
+        Double Potassium_mg,
+        Double Sodium_mg,
+        Double Zinc_mg,
+        Double Copper_mcg,
+        Double Manganese_mg,
+        Double Selenium_mcg,
+        Double VitC_mg,
+        Double Thiamin_mg,
+        Double Riboflavin_mg,
+        Double Niacin_mg,
+        Double VitB6_mg,
+        Double Folate_mcg,
+        Double VitB12_mcg,
+        Double VitA_mcg,
+        Double VitE_mg,
+        Double VitD2_mcg
+) {}

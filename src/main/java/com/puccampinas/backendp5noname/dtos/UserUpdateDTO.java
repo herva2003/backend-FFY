@@ -3,5 +3,7 @@ package com.puccampinas.backendp5noname.dtos;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.NonNull;
 
-public record UserUpdateDTO(String login, String fullName, Double height,Double weight) {
+import java.util.List;
+
+public record UserUpdateDTO(String login, String fullName, Double height, Double weight, List<String> diets, List<String> allergies, List<String> intolerances) {
 }

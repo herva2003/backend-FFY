@@ -45,14 +45,25 @@ public class User implements UserDetails {
     @DocumentReference
     private List<Ingredient> ingredients;
 
+    @DocumentReference
+    private List<NutritionalValuesUser> nutritionalValuesUser;
 
     @DocumentReference
     private List<Recipe> recipes;
+
+    private List<String>   diets;
+
+    private List<String> allergies;
+
+    private List<String> intolerances;
 
     @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
     private LocalDateTime createdAt;
     @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
     private LocalDateTime updatedAt;
+
+
+
 
     public User(SignupDTO userDTO, String password) {
         this.login = userDTO.getEmail();
@@ -63,6 +74,10 @@ public class User implements UserDetails {
         this.status = StatusUser.ATIVO;
         this.ingredients = new ArrayList<>();
         this.recipes = new ArrayList<>();
+        this.nutritionalValuesUser = new ArrayList<>();
+        this.diets = new ArrayList<>();
+        this.allergies = new ArrayList<>();
+        this.intolerances = new ArrayList<>();
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }

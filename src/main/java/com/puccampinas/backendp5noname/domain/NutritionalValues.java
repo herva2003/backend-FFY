@@ -33,8 +33,6 @@ public class NutritionalValues {
     private Double VitB6_mg;
     private Double Zinc_mg;
     private Double VitE_mg;
-    @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
-    private LocalDateTime doneAt;
 
 
     public NutritionalValues(NutritionalValuesDoubleDTO data) {
@@ -71,7 +69,6 @@ public class NutritionalValues {
         this.VitB6_mg = parseDouble(data.VitB6_mg());
         this.Zinc_mg = parseDouble(data.Zinc_mg());
         this.VitE_mg = parseDouble(data.VitE_mg());
-        this.doneAt = LocalDateTime.now();
     }
 
     private Double parseDouble(String value) {

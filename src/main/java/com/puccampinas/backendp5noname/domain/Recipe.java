@@ -30,7 +30,7 @@ public class Recipe {
     @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
     private LocalDateTime createdAt;
     @DocumentReference
-    private List<NutritionalValues> nutritionalValues;
+    private NutritionalValues nutritionalValues;
 
 
     public Recipe(RecipeDTO data,List<IngredientRecipe> ingredients) {
@@ -39,7 +39,7 @@ public class Recipe {
         this.preparationMethod = data.getPreparationMethod();
         this.preparationTime = data.getPreparationTime();
         this.createdAt = LocalDateTime.now();
-        this.nutritionalValues = new ArrayList<>();
+        this.nutritionalValues = null;
     }
 }
 
