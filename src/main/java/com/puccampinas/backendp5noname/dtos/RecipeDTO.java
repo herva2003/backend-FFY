@@ -20,6 +20,8 @@ public class RecipeDTO {
     private List<IngredientRecipeDTO> ingredients;
     private List<String> preparationMethod;
     private int preparationTime;
+    private NutritionalValuesDoubleDTO nutritionalValues;
+    @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
     private LocalDateTime generatedAt;
 }
 

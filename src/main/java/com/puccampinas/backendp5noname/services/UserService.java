@@ -41,6 +41,9 @@ public class UserService implements UserDetailsService {
     private NutritionalValuesUserService nutritionalValuesUserService;
 
     @Autowired
+    private NutritionalValuesService nutritionalValuesService;
+
+    @Autowired
     private IngredientRecipeService ingredientRecipeService;
 
 
@@ -85,9 +88,9 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
     public RecipeDTO addRecipeToUser(User user, RecipeDTO data) {
-        System.out.println(2323);
         List<IngredientRecipe> ingredients = ingredientRecipeService.convertAndSave(data.getIngredients());
-        Recipe recipe = new Recipe(data,ingredients);
+        NutritionalValues  nutritionalValues = this.nutritionalValuesService.saveNutritionalValues(data.getNutritionalValues());
+        Recipe recipe = new Recipe(data,ingredients,nutritionalValues);
         recipeService.addRecipe(recipe);
         user.getRecipes().add(recipe);
         userRepository.save(user);

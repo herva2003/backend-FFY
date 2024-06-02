@@ -41,7 +41,7 @@ public class RecipeService {
                 + "Não adicione ingredientes extras. Não é obrigatório usar todos os ingredientes.\n"
                 + "Crie 1 receita em inglês, considerando as seguintes informações:\n"
                 + "- Ingredientes disponíveis:" + user.getIngredients() + "\n"
-                + "- Restrições alimentares:" + user.getDiets() + "" + user.getAllergies() +  "" + user.getIntolerances() + "\n"
+                + "- Restrições alimentares:" + user.getDiets() + " " + user.getAllergies() +  " " + user.getIntolerances() + "\n"
                 + "- Tipo de refeição: " + data.type() + "\n"
                 + "- Observações: " + data.observation() + "\n"
                 + "Apresente as receitas em formato JSON, sem comentários. Agrupe os objetos JSON de cada receita "
@@ -51,6 +51,33 @@ public class RecipeService {
                 + " - 'ingredients': Lista de objetos, cada objeto contendo 'name': String e 'quantity': Double (em gramas)\n"
                 + " - 'preparationMethod': Lista de strings\n"
                 + " - 'preparationTime': Double (em minutos)\n"
+                + " - 'nutritionalValues':      Double Energy_kcal,\n" +
+                "                Double Protein_g,\n" +
+                "                Double Saturated_fats_g,\n" +
+                "                Double Fat_g,\n" +
+                "                Double Carb_g,\n" +
+                "                Double Fiber_g,\n" +
+                "                Double Sugar_g,\n" +
+                "                Double Calcium_mg,\n" +
+                "                Double Iron_mg,\n" +
+                "                Double Magnesium_mg,\n" +
+                "                Double Phosphorus_mg,\n" +
+                "                Double Potassium_mg,\n" +
+                "                Double Sodium_mg,\n" +
+                "                Double Zinc_mg,\n" +
+                "                Double Copper_mcg,\n" +
+                "                Double Manganese_mg,\n" +
+                "                Double Selenium_mcg,\n" +
+                "                Double VitC_mg,\n" +
+                "                Double Thiamin_mg,\n" +
+                "                Double Riboflavin_mg,\n" +
+                "                Double Niacin_mg,\n" +
+                "                Double VitB6_mg,\n" +
+                "                Double Folate_mcg,\n" +
+                "                Double VitB12_mcg,\n" +
+                "                Double VitA_mcg,\n" +
+                "                Double VitE_mg,\n" +
+                "                Double VitD2_mcg\n"
                 + "Os ingredientes devem ser listados com o nome exato fornecido e as quantidades "
                 + "devem ser especificadas em números inteiros ou decimais, representando a quantidade em gramas, "
                 + "partindo de uma base de 100 gramas para cada ingrediente.\n");

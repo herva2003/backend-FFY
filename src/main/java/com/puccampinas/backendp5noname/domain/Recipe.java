@@ -33,13 +33,13 @@ public class Recipe {
     private NutritionalValues nutritionalValues;
 
 
-    public Recipe(RecipeDTO data,List<IngredientRecipe> ingredients) {
+    public Recipe(RecipeDTO data,List<IngredientRecipe> ingredients, NutritionalValues nutritionalValues) {
         this.name = data.getName();
         this.ingredients =  ingredients;
         this.preparationMethod = data.getPreparationMethod();
         this.preparationTime = data.getPreparationTime();
         this.createdAt = LocalDateTime.now();
-        this.nutritionalValues = null;
+        this.nutritionalValues = nutritionalValues;
     }
 }
 
