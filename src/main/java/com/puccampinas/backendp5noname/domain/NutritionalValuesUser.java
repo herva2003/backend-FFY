@@ -82,6 +82,37 @@ public class NutritionalValuesUser {
         this.createdAt = LocalDateTime.now();
     }
 
+    public NutritionalValuesUser(NutritionalValuesDoubleDTO data) {
+        this.Energy_kcal = data.Energy_kcal();
+        this.Protein_g = data.Protein_g();
+        this.Saturated_fats_g = data.Saturated_fats_g();
+        this.Fat_g = data.Fat_g();
+        this.Carb_g = data.Carb_g();
+        this.Fiber_g = data.Fiber_g();
+        this.Sugar_g = data.Sugar_g();
+        this.Calcium_mg = data.Calcium_mg();
+        this.Iron_mg = data.Iron_mg();
+        this.Magnesium_mg = data.Magnesium_mg();
+        this.Phosphorus_mg = data.Phosphorus_mg();
+        this.Potassium_mg = data.Potassium_mg();
+        this.Sodium_mg = data.Sodium_mg();
+        this.Zinc_mg = data.Zinc_mg();
+        this.Copper_mcg = data.Copper_mcg();
+        this.Manganese_mg = data.Manganese_mg();
+        this.Selenium_mcg = data.Selenium_mcg();
+        this.VitC_mg = data.VitC_mg();
+        this.Thiamin_mg = data.Thiamin_mg();
+        this.Riboflavin_mg = data.Riboflavin_mg();
+        this.Niacin_mg = data.Niacin_mg();
+        this.VitB6_mg = data.VitB6_mg();
+        this.Folate_mcg = data.Folate_mcg();
+        this.VitB12_mcg = data.VitB12_mcg();
+        this.VitA_mcg = data.VitA_mcg();
+        this.VitE_mg = data.VitE_mg();
+        this.VitD2_mcg = data.VitD2_mcg();
+        this.createdAt = LocalDateTime.now();
+    }
+
     public NutritionalValuesUser(NutritionalValuesUserStringDTO data) {
         this.Energy_kcal = parseDouble(data.Energy_kcal());
         this.Protein_g = parseDouble(data.Protein_g());

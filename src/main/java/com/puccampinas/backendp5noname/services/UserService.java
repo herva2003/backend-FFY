@@ -90,8 +90,12 @@ public class UserService implements UserDetailsService {
     public RecipeDTO addRecipeToUser(User user, RecipeDTO data) {
         List<IngredientRecipe> ingredients = ingredientRecipeService.convertAndSave(data.getIngredients());
         NutritionalValues  nutritionalValues = this.nutritionalValuesService.saveNutritionalValues(data.getNutritionalValues());
+        NutritionalValuesUser nv = this.nutritionalValuesUserService.saveNutritionalValuesUserFromRecipe(data.getNutritionalValues());
         Recipe recipe = new Recipe(data,ingredients,nutritionalValues);
         recipeService.addRecipe(recipe);
+        List<NutritionalValuesUser> list = user.getNutritionalValuesUser();
+        list.add(nv);
+        user.setNutritionalValuesUser(list);
         user.getRecipes().add(recipe);
         userRepository.save(user);
         return data;
