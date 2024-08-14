@@ -52,6 +52,7 @@ public class WebSecurityConfig {
                     req.requestMatchers( "/api/v1/ingredient/**").permitAll();
                     req.requestMatchers("/api/v1/pdf").permitAll();
                     req.requestMatchers( "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
+                    req.requestMatchers( "/api/v1/recipe/**").permitAll();
                     req.anyRequest().authenticated();
                 })
                 .addFilterBefore(accessTokenFilter(), UsernamePasswordAuthenticationFilter.class)

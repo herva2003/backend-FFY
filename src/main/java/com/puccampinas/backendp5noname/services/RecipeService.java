@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class RecipeService {
@@ -119,5 +120,8 @@ public class RecipeService {
         return this.recipeRepository.findById(id).orElse(null);
     }
 
+    public List<Recipe> getAllRecipes() {
+        return this.recipeRepository.findAll();
+    }
 
 }

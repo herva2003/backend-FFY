@@ -9,12 +9,13 @@ import com.puccampinas.backendp5noname.dtos.RecipeInfoDTO;
 import com.puccampinas.backendp5noname.services.RecipeService;
 import com.puccampinas.backendp5noname.services.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/recipe/")
@@ -27,7 +28,20 @@ public class RecipeController {
     @Autowired
     private UserService userService;
 
+    private static final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
+    @Autowired
+    public RecipeController(RecipeService recipeService) {
+        this.recipeService = recipeService;
+    }
+
+    @GetMapping("/getRecipes")
+    public List<Recipe> getAllRecipes() {
+        logger.info("Recebendo requisição para /getRecipes");
+        List<Recipe> recipes = recipeService.getAllRecipes();
+        logger.info("Retornando receitas: " + recipes);
+        return recipes;
+    }
 
     @PostMapping("/generate")
     public RecipeDTO generateRecipe(@RequestBody RecipeInfoDTO data,@AuthenticationPrincipal User user) throws JsonProcessingException {
