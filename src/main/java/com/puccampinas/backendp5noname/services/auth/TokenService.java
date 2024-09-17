@@ -27,7 +27,10 @@ public class TokenService {
     private JWTVerifier accessTokenVerifier;
     private JWTVerifier refreshTokenVerifier;
 
-    public TokenService(@Value("${accessTokenSecret}") String accessTokenSecret, @Value("${refreshTokenSecret}") String refreshTokenSecret, @Value("${com.example.demo.refreshTokenExpirationDays}") int refreshTokenExpirationDays, @Value("${com.example.demo.accessTokenExpirationMinutes}") int accessTokenExpirationMinutes) {
+    public TokenService(@Value("${accessTokenSecret}") String accessTokenSecret,
+                        @Value("${refreshTokenSecret}") String refreshTokenSecret,
+                        @Value("${com.example.demo.refreshTokenExpirationDays}") int refreshTokenExpirationDays,
+                        @Value("${com.example.demo.accessTokenExpirationMinutes}") int accessTokenExpirationMinutes) {
         accessTokenExpirationMs = (long) accessTokenExpirationMinutes * 60 * 1000;
         refreshTokenExpirationMs = (long) refreshTokenExpirationDays * 24 * 60 * 60 * 1000;
         accessTokenAlgorithm = Algorithm.HMAC512(accessTokenSecret);
@@ -41,38 +44,44 @@ public class TokenService {
     }
 
     public String generateAccessToken(User user) {
-        return JWT.create()
+        String token = JWT.create()
                 .withIssuer(issuer)
                 .withSubject(user.getId())
                 .withIssuedAt(new Date())
-               // .withExpiresAt(new Date(new Date().getTime() + accessTokenExpirationMs))
+                .withExpiresAt(new Date(new Date().getTime() + accessTokenExpirationMs))
                 .sign(accessTokenAlgorithm);
+        log.info("Generated Access Token: " + token);
+        return token;
     }
 
     public String generateRefreshToken(User user, RefreshToken refreshToken) {
-        return JWT.create()
+        String token = JWT.create()
                 .withIssuer(issuer)
                 .withSubject(user.getId())
                 .withClaim("tokenId", refreshToken.getId())
                 .withIssuedAt(new Date())
-              //  .withExpiresAt(new Date((new Date()).getTime() + refreshTokenExpirationMs))
+                .withExpiresAt(new Date((new Date()).getTime() + refreshTokenExpirationMs))
                 .sign(refreshTokenAlgorithm);
+        log.info("Generated Refresh Token: " + token);
+        return token;
     }
 
     private Optional<DecodedJWT> decodeAccessToken(String token) {
         try {
+            log.info("Decoding Access Token: " + token);
             return Optional.of(accessTokenVerifier.verify(token));
         } catch (JWTVerificationException e) {
-            log.error("invalid access token", e);
+            log.error("Invalid access token", e);
         }
         return Optional.empty();
     }
 
     private Optional<DecodedJWT> decodeRefreshToken(String token) {
         try {
+            log.info("Decoding Refresh Token: " + token);
             return Optional.of(refreshTokenVerifier.verify(token));
         } catch (JWTVerificationException e) {
-            log.error("invalid refresh token", e);
+            log.error("Invalid refresh token", e);
         }
         return Optional.empty();
     }

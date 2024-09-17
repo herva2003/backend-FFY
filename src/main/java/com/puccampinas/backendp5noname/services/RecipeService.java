@@ -1,13 +1,14 @@
 package com.puccampinas.backendp5noname.services;
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.puccampinas.backendp5noname.domain.Comment;
 import com.puccampinas.backendp5noname.domain.Recipe;
 import com.puccampinas.backendp5noname.domain.User;
 import com.puccampinas.backendp5noname.dtos.RecipeDTO;
 import com.puccampinas.backendp5noname.dtos.RecipeInfoDTO;
+import com.puccampinas.backendp5noname.ResourceNotFoundException;
 import com.puccampinas.backendp5noname.repositories.RecipeRepository;
 import org.springframework.ai.chat.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -16,7 +17,6 @@ import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,8 +30,6 @@ public class RecipeService {
 
     @Autowired
     private RecipeRepository recipeRepository;
-
-
 
     public Recipe addRecipe(Recipe recipe) {
         return recipeRepository.save(recipe);
@@ -109,7 +107,7 @@ public class RecipeService {
     }
 
     public Recipe singleRecipe(String id) {
-       return this.recipeRepository.findById(id).orElse(null);
+        return this.recipeRepository.findById(id).orElse(null);
     }
 
     public Recipe saveRecipe(Recipe recipe) {
@@ -124,4 +122,22 @@ public class RecipeService {
         return this.recipeRepository.findAll();
     }
 
+    public Recipe getRecipeById(String recipeId) {
+        return recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Recipe not found with id: " + recipeId));
+    }
+
+    public void likeRecipe(String recipeId, String userId) {
+        Recipe recipe = getRecipeById(recipeId);
+        if (!recipe.getLikes().contains(userId)) {
+            recipe.getLikes().add(userId);
+            recipeRepository.save(recipe);
+        }
+    }
+
+    public void addComment(String recipeId, Comment comment) {
+        Recipe recipe = getRecipeById(recipeId);
+        recipe.getComments().add(comment);
+        recipeRepository.save(recipe);
+    }
 }

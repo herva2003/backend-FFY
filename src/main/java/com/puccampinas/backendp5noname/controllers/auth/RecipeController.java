@@ -1,7 +1,7 @@
 package com.puccampinas.backendp5noname.controllers.auth;
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.puccampinas.backendp5noname.domain.Comment;
 import com.puccampinas.backendp5noname.domain.Recipe;
 import com.puccampinas.backendp5noname.domain.User;
 import com.puccampinas.backendp5noname.dtos.RecipeDTO;
@@ -44,7 +44,23 @@ public class RecipeController {
     }
 
     @PostMapping("/generate")
-    public RecipeDTO generateRecipe(@RequestBody RecipeInfoDTO data,@AuthenticationPrincipal User user) throws JsonProcessingException {
-        return recipeService.generateRecipe(data,user);
+    public RecipeDTO generateRecipe(@RequestBody RecipeInfoDTO data, @AuthenticationPrincipal User user) throws JsonProcessingException {
+        return recipeService.generateRecipe(data, user);
+    }
+
+    @GetMapping("/{recipeId}")
+    public Recipe getRecipe(@PathVariable String recipeId) {
+        return recipeService.getRecipeById(recipeId);
+    }
+
+    @PostMapping("/{recipeId}/like")
+    public void likeRecipe(@PathVariable String recipeId, @AuthenticationPrincipal User user) {
+        recipeService.likeRecipe(recipeId, user.getId());
+    }
+
+    @PostMapping("/{recipeId}/comment")
+    public void addComment(@PathVariable String recipeId, @RequestBody Comment comment, @AuthenticationPrincipal User user) {
+        comment.setCreatedBy(user.getId());
+        recipeService.addComment(recipeId, comment);
     }
 }
