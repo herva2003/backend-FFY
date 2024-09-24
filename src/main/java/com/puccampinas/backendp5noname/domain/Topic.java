@@ -1,5 +1,6 @@
 package com.puccampinas.backendp5noname.domain;
 
+import com.puccampinas.backendp5noname.dtos.TopicDTO;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,6 +18,14 @@ public class Topic {
 
     public Topic() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public Topic(TopicDTO data) {
+        this.title = data.title();
+        this.description = data.description();
+        this.createdBy = data.createdBy();
+        this.createdAt = LocalDateTime.now();
+
     }
 
     // Getters e Setters

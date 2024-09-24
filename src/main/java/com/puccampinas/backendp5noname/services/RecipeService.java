@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puccampinas.backendp5noname.domain.Comment;
 import com.puccampinas.backendp5noname.domain.Recipe;
 import com.puccampinas.backendp5noname.domain.User;
+import com.puccampinas.backendp5noname.dtos.CommentDTO;
 import com.puccampinas.backendp5noname.dtos.RecipeDTO;
 import com.puccampinas.backendp5noname.dtos.RecipeInfoDTO;
 import com.puccampinas.backendp5noname.ResourceNotFoundException;
@@ -135,9 +136,9 @@ public class RecipeService {
         }
     }
 
-    public void addComment(String recipeId, Comment comment) {
+    public void addComment(String recipeId, CommentDTO comment) {
         Recipe recipe = getRecipeById(recipeId);
-        recipe.getComments().add(comment);
+        recipe.getComments().add(new Comment(comment.content(),"sdsdsds"));
         recipeRepository.save(recipe);
     }
 }

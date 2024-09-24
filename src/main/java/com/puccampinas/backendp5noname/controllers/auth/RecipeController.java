@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.puccampinas.backendp5noname.domain.Comment;
 import com.puccampinas.backendp5noname.domain.Recipe;
 import com.puccampinas.backendp5noname.domain.User;
+import com.puccampinas.backendp5noname.dtos.CommentDTO;
 import com.puccampinas.backendp5noname.dtos.RecipeDTO;
 import com.puccampinas.backendp5noname.dtos.RecipeInfoDTO;
 import com.puccampinas.backendp5noname.services.RecipeService;
@@ -19,7 +20,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/recipe/")
-@SecurityRequirement(name = "bearer-key")
 public class RecipeController {
 
     @Autowired
@@ -58,9 +58,12 @@ public class RecipeController {
         recipeService.likeRecipe(recipeId, user.getId());
     }
 
-    @PostMapping("/{recipeId}/comment")
-    public void addComment(@PathVariable String recipeId, @RequestBody Comment comment, @AuthenticationPrincipal User user) {
-        comment.setCreatedBy(user.getId());
-        recipeService.addComment(recipeId, comment);
+    @PostMapping("/comment")
+    public void addComment(@RequestBody CommentDTO content) {
+        System.out.println("test");
+        System.out.println(content.id());
+        System.out.println(content);
+
+        recipeService.addComment(content.id(), content);
     }
 }

@@ -18,4 +18,11 @@ public class Comment {
     private String content;
     private String createdBy;
     private LocalDateTime createdAt;
+
+
+    public Comment(String content, String createdBy) {
+        this.content = content;
+        this.createdBy = createdBy;
+        this.createdAt = LocalDateTime.now();
+    }
 }

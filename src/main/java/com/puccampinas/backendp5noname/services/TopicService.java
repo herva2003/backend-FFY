@@ -2,6 +2,7 @@ package com.puccampinas.backendp5noname.services;
 
 import com.puccampinas.backendp5noname.ResourceNotFoundException;
 import com.puccampinas.backendp5noname.domain.Topic;
+import com.puccampinas.backendp5noname.dtos.TopicDTO;
 import com.puccampinas.backendp5noname.repositories.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,9 +23,8 @@ public class TopicService {
         return topicRepository.findAll();
     }
 
-    public Topic createTopic(Topic topic) {
-        topic.setCreatedAt(LocalDateTime.now());
-        return topicRepository.save(topic);
+    public Topic createTopic(TopicDTO topic) {
+        return topicRepository.save(new Topic(topic));
     }
 
     public Topic getTopicById(String topicId) {
