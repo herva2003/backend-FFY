@@ -46,7 +46,7 @@ public class TokenService {
     public String generateAccessToken(User user) {
         String token = JWT.create()
                 .withIssuer(issuer)
-                .withSubject(user.getId())
+                .withSubject(user.getId().toString()) // Certifique-se de que o ID está sendo convertido para string
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(new Date().getTime() + accessTokenExpirationMs))
                 .sign(accessTokenAlgorithm);
@@ -57,7 +57,7 @@ public class TokenService {
     public String generateRefreshToken(User user, RefreshToken refreshToken) {
         String token = JWT.create()
                 .withIssuer(issuer)
-                .withSubject(user.getId())
+                .withSubject(user.getId().toString()) // Certifique-se de que o ID está sendo convertido para string
                 .withClaim("tokenId", refreshToken.getId())
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date((new Date()).getTime() + refreshTokenExpirationMs))
@@ -87,22 +87,50 @@ public class TokenService {
     }
 
     public boolean validateAccessToken(String token) {
-        return decodeAccessToken(token).isPresent();
+        boolean isValid = decodeAccessToken(token).isPresent();
+        log.info("Access Token is valid: " + isValid);
+        return isValid;
     }
 
     public boolean validateRefreshToken(String token) {
-        return decodeRefreshToken(token).isPresent();
+        boolean isValid = decodeRefreshToken(token).isPresent();
+        log.info("Refresh Token is valid: " + isValid);
+        return isValid;
     }
 
     public String getUserIdFromAccessToken(String token) {
-        return decodeAccessToken(token).get().getSubject();
+        Optional<DecodedJWT> decodedJWT = decodeAccessToken(token);
+        if (decodedJWT.isPresent()) {
+            String userId = decodedJWT.get().getSubject();
+            log.info("Extracted userId from Access Token: " + userId);
+            return userId;
+        } else {
+            log.warn("Failed to extract userId from Access Token");
+            return null;
+        }
     }
 
     public String getUserIdFromRefreshToken(String token) {
-        return decodeRefreshToken(token).get().getSubject();
+        Optional<DecodedJWT> decodedJWT = decodeRefreshToken(token);
+        if (decodedJWT.isPresent()) {
+            String userId = decodedJWT.get().getSubject();
+            log.info("Extracted userId from Refresh Token: " + userId);
+            return userId;
+        } else {
+            log.warn("Failed to extract userId from Refresh Token");
+            return null;
+        }
     }
 
     public String getTokenIdFromRefreshToken(String token) {
-        return decodeRefreshToken(token).get().getClaim("tokenId").asString();
+        Optional<DecodedJWT> decodedJWT = decodeRefreshToken(token);
+        if (decodedJWT.isPresent()) {
+            String tokenId = decodedJWT.get().getClaim("tokenId").asString();
+            log.info("Extracted tokenId from Refresh Token: " + tokenId);
+            return tokenId;
+        } else {
+            log.warn("Failed to extract tokenId from Refresh Token");
+            return null;
+        }
     }
 }

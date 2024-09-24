@@ -5,6 +5,7 @@ import com.puccampinas.backendp5noname.domain.Comment;
 import com.puccampinas.backendp5noname.domain.Recipe;
 import com.puccampinas.backendp5noname.domain.User;
 import com.puccampinas.backendp5noname.dtos.CommentDTO;
+import com.puccampinas.backendp5noname.dtos.LikeDTO;
 import com.puccampinas.backendp5noname.dtos.RecipeDTO;
 import com.puccampinas.backendp5noname.dtos.RecipeInfoDTO;
 import com.puccampinas.backendp5noname.services.RecipeService;
@@ -19,7 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/recipe/")
+@RequestMapping("/api/v1/recipe")
+@SecurityRequirement(name = "bearer-key")
 public class RecipeController {
 
     @Autowired
@@ -53,17 +55,15 @@ public class RecipeController {
         return recipeService.getRecipeById(recipeId);
     }
 
-    @PostMapping("/{recipeId}/like")
-    public void likeRecipe(@PathVariable String recipeId, @AuthenticationPrincipal User user) {
-        recipeService.likeRecipe(recipeId, user.getId());
+    @PostMapping("/like/{recipeId}")
+    public void addLike(@RequestBody LikeDTO likeDTO) {
+        logger.info("Recebendo like para a receita: " + likeDTO.recipeId() + " do usuário: " + likeDTO.userId());
+        recipeService.addLike(likeDTO.recipeId(), likeDTO.userId());
     }
 
     @PostMapping("/comment")
     public void addComment(@RequestBody CommentDTO content) {
-        System.out.println("test");
-        System.out.println(content.id());
-        System.out.println(content);
-
+        logger.info("Recebendo comentário para a receita: " + content.id());
         recipeService.addComment(content.id(), content);
     }
 }

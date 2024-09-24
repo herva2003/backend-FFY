@@ -7,10 +7,12 @@ import com.puccampinas.backendp5noname.domain.Comment;
 import com.puccampinas.backendp5noname.domain.Recipe;
 import com.puccampinas.backendp5noname.domain.User;
 import com.puccampinas.backendp5noname.dtos.CommentDTO;
+import com.puccampinas.backendp5noname.dtos.LikeDTO;
 import com.puccampinas.backendp5noname.dtos.RecipeDTO;
 import com.puccampinas.backendp5noname.dtos.RecipeInfoDTO;
 import com.puccampinas.backendp5noname.ResourceNotFoundException;
 import com.puccampinas.backendp5noname.repositories.RecipeRepository;
+import org.bson.types.ObjectId;
 import org.springframework.ai.chat.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatClient;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RecipeService {
@@ -128,7 +131,7 @@ public class RecipeService {
                 .orElseThrow(() -> new ResourceNotFoundException("Recipe not found with id: " + recipeId));
     }
 
-    public void likeRecipe(String recipeId, String userId) {
+    public void addLike(String recipeId, String userId) {
         Recipe recipe = getRecipeById(recipeId);
         if (!recipe.getLikes().contains(userId)) {
             recipe.getLikes().add(userId);
@@ -138,7 +141,7 @@ public class RecipeService {
 
     public void addComment(String recipeId, CommentDTO comment) {
         Recipe recipe = getRecipeById(recipeId);
-        recipe.getComments().add(new Comment(comment.content(),"sdsdsds"));
+        recipe.getComments().add(new Comment(comment.content(), comment.id()));
         recipeRepository.save(recipe);
     }
 }
