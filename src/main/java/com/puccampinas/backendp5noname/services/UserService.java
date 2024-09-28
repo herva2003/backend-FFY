@@ -179,8 +179,6 @@ public class UserService implements UserDetailsService {
 
     }
 
-
-
     public NutritionalValuesUser addNutritionalValuesInUser(User user, NutritionalValuesUserDoubleDTO data) {
        NutritionalValuesUser nutritionalValues = this.nutritionalValuesUserService.saveNutritionalValuesUser(data);
        List<NutritionalValuesUser> list = user.getNutritionalValuesUser();
@@ -190,4 +188,43 @@ public class UserService implements UserDetailsService {
        return nutritionalValues;
     }
 
+    public List<IngredientVO> addIngredientsToShoppList(User user, List<IngredientVO> ingredientsVO) {
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<String> ingredientIds = ingredientsVO.stream()
+                .map(IngredientVO::getId)
+                .collect(Collectors.toList());
+
+        List<Ingredient> shoppingList = ingredientService.allIngredientsById(ingredientIds);
+
+        existingUser.getShoppingList().addAll(shoppingList);
+
+        userRepository.save(existingUser);
+
+        return ingredientsVO;
+    }
+
+    public List<Ingredient> ingredientsFromShoppList(User user) {
+        return user.getShoppingList();
+    }
+
+    public void deleteIngredientsFromShoppList(User user, List<IngredientIDDTO> ingredientIds)  {
+        List<Ingredient> userIngredients = user.getShoppingList();
+
+        ingredientIds.stream()
+                .map(IngredientIDDTO::id)
+                .forEach(ingredientId -> {
+                    boolean removed = userIngredients.removeIf(ingredient -> ingredient.getId().equals(ingredientId));
+                    if (!removed) {
+                        try {
+                            throw new ChangeSetPersister.NotFoundException();
+                        } catch (ChangeSetPersister.NotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+
+        userRepository.save(user);
+    }
 }

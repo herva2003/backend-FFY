@@ -31,7 +31,7 @@ public class Recipe {
     private LocalDateTime createdAt;
     @DocumentReference
     private NutritionalValues nutritionalValues;
-    private List<String> likes = new ArrayList<>();
+    private List<Like> likes = new ArrayList<>();
     private List<Comment> comments = new ArrayList<>();
 
 

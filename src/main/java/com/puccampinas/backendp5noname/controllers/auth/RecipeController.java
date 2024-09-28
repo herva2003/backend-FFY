@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/recipe")
 @SecurityRequirement(name = "bearer-key")
+@CrossOrigin(origins = "http://localhost:5173")
 public class RecipeController {
 
     @Autowired
@@ -55,15 +58,13 @@ public class RecipeController {
         return recipeService.getRecipeById(recipeId);
     }
 
-    @PostMapping("/like/{recipeId}")
-    public void addLike(@RequestBody LikeDTO likeDTO) {
-        logger.info("Recebendo like para a receita: " + likeDTO.recipeId() + " do usuário: " + likeDTO.userId());
-        recipeService.addLike(likeDTO.recipeId(), likeDTO.userId());
+    @PostMapping("/likes")
+    public void addLike(@RequestBody LikeDTO userId) {
+        recipeService.addLike(userId.recipeId(), userId);
     }
 
     @PostMapping("/comment")
     public void addComment(@RequestBody CommentDTO content) {
-        logger.info("Recebendo comentário para a receita: " + content.id());
         recipeService.addComment(content.id(), content);
     }
 }

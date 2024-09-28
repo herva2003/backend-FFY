@@ -51,19 +51,19 @@ public class User implements UserDetails {
     @DocumentReference
     private List<Recipe> recipes;
 
-    private List<String>   diets;
+    private List<String> diets;
 
     private List<String> allergies;
 
     private List<String> intolerances;
 
+    @DocumentReference
+    private List<Ingredient> shoppingList;
+
     @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
     private LocalDateTime createdAt;
     @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
     private LocalDateTime updatedAt;
-
-
-
 
     public User(SignupDTO userDTO, String password) {
         this.login = userDTO.getEmail();
@@ -78,6 +78,7 @@ public class User implements UserDetails {
         this.diets = new ArrayList<>();
         this.allergies = new ArrayList<>();
         this.intolerances = new ArrayList<>();
+        this.shoppingList = new ArrayList<>();
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
@@ -91,7 +92,6 @@ public class User implements UserDetails {
     public String getUsername() {
         return null;
     }
-
 
     @Override
     public boolean isAccountNonExpired() {

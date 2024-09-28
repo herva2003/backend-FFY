@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puccampinas.backendp5noname.domain.Comment;
+import com.puccampinas.backendp5noname.domain.Like;
 import com.puccampinas.backendp5noname.domain.Recipe;
 import com.puccampinas.backendp5noname.domain.User;
 import com.puccampinas.backendp5noname.dtos.CommentDTO;
@@ -131,12 +132,10 @@ public class RecipeService {
                 .orElseThrow(() -> new ResourceNotFoundException("Recipe not found with id: " + recipeId));
     }
 
-    public void addLike(String recipeId, String userId) {
+    public void addLike(String recipeId, LikeDTO userId) {
         Recipe recipe = getRecipeById(recipeId);
-        if (!recipe.getLikes().contains(userId)) {
-            recipe.getLikes().add(userId);
-            recipeRepository.save(recipe);
-        }
+        recipe.getLikes().add(new Like(userId.userId()));
+        recipeRepository.save(recipe);
     }
 
     public void addComment(String recipeId, CommentDTO comment) {

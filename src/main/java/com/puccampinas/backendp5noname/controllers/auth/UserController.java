@@ -34,15 +34,11 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-
-
     @PostMapping("/ingredient")
     public ResponseEntity<ListApiResponse<IngredientVO>>
-    addIngredient(@AuthenticationPrincipal User user,
-                  @RequestBody List<IngredientVO> ingredients) {
+    addIngredient(@AuthenticationPrincipal User user, @RequestBody List<IngredientVO> ingredients) {
         List<IngredientVO> addedIngredients = userService.addIngredientsToUser(user, ingredients);
         return ResponseEntity.ok(new ListApiResponse<IngredientVO>(HttpStatus.OK, "Ingredients added successfully", addedIngredients));
-
     }
 
     @GetMapping("/ingredient")
@@ -52,6 +48,35 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/ingredient/")
+    public ResponseEntity<Void> deleteListIngredient(@AuthenticationPrincipal User user, @RequestBody List<IngredientIDDTO> ids) throws ChangeSetPersister.NotFoundException {
+        User existingUser = userService.existUser(user);
+        if (existingUser ==  null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        userService.deleteIngredientsFromUser(user, ids);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/shoppList")
+    public ResponseEntity<ListApiResponse<IngredientVO>>
+    addIngredientShoppList(@AuthenticationPrincipal User user, @RequestBody List<IngredientVO> ingredients) {
+        List<IngredientVO> addedIngredients = userService.addIngredientsToShoppList(user, ingredients);
+        return ResponseEntity.ok(new ListApiResponse<IngredientVO>(HttpStatus.OK, "Ingredients added to Shopping list successfully", addedIngredients));
+    }
+
+    @GetMapping("/shoppList")
+    public ResponseEntity<ListApiResponse<Ingredient>> myShoppList(@AuthenticationPrincipal User user) {
+        List<Ingredient> userIngredients = this.userService.ingredientsFromShoppList(user);
+        ListApiResponse<Ingredient> response = new ListApiResponse<>(HttpStatus.OK, "User Shopping list", userIngredients);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/shoppList/")
+    public ResponseEntity<Void> deleteIngredientShoppList(@AuthenticationPrincipal User user, @RequestBody List<IngredientIDDTO> ids) throws ChangeSetPersister.NotFoundException {
+        User existingUser = userService.existUser(user);
+        if (existingUser == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        userService.deleteIngredientsFromShoppList(user, ids);
+        return ResponseEntity.noContent().build();
+    }
 
     @GetMapping("/nv")
     public ResponseEntity<ListApiResponse<NutritionalValuesUser>> nutritionalValuesFromUser(@AuthenticationPrincipal User user) {
@@ -81,14 +106,6 @@ public class UserController {
         User existingUser = userService.existUser(user);
         if (existingUser == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         userService.deleteIngredientFromUser(user, id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/ingredient/")
-    public ResponseEntity<Void> deleteListIngredient(@AuthenticationPrincipal User user, @RequestBody List<IngredientIDDTO> ids) throws ChangeSetPersister.NotFoundException {
-        User existingUser = userService.existUser(user);
-        if (existingUser == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        userService.deleteIngredientsFromUser(user, ids);
         return ResponseEntity.noContent().build();
     }
 

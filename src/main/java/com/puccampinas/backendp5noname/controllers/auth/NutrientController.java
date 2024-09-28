@@ -19,8 +19,6 @@ public class NutrientController {
     @Autowired
     private IngredientService ingredientService;
 
-
-
     @GetMapping("/")
     public ResponseEntity<List<IngredientVO>> getAllNutrients() {
         List<IngredientVO> ingredients = ingredientService.allIngredients()
