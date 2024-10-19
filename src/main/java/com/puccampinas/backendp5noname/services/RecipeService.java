@@ -144,4 +144,11 @@ public class RecipeService {
         recipe.getComments().add(new Comment(comment.content(), comment.id()));
         recipeRepository.save(recipe);
     }
+
+    public void addReviewIdToRecipe(String recipeId, String reviewId) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Recipe not found with id " + recipeId));
+        recipe.addReviewId(reviewId);
+        recipeRepository.save(recipe);
+    }
 }

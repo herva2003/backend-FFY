@@ -41,22 +41,15 @@ public class User implements UserDetails {
     private Double weight;
     @NonNull
     private StatusUser status;
-
     @DocumentReference
     private List<Ingredient> ingredients;
-
     @DocumentReference
     private List<NutritionalValuesUser> nutritionalValuesUser;
-
     @DocumentReference
     private List<Recipe> recipes;
-
     private List<String> diets;
-
     private List<String> allergies;
-
     private List<String> intolerances;
-
     private List<String> reviewsId = new ArrayList<>();
 
     @DocumentReference

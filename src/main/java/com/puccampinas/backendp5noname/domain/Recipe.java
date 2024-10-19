@@ -33,7 +33,7 @@ public class Recipe {
     private NutritionalValues nutritionalValues;
     private List<Like> likes = new ArrayList<>();
     private List<Comment> comments = new ArrayList<>();
-
+    private List<String> reviewsId = new ArrayList<>();
 
     public Recipe(RecipeDTO data,List<IngredientRecipe> ingredients, NutritionalValues nutritionalValues) {
         this.name = data.getName();
@@ -42,6 +42,11 @@ public class Recipe {
         this.preparationTime = data.getPreparationTime();
         this.createdAt = LocalDateTime.now();
         this.nutritionalValues = nutritionalValues;
+        this.reviewsId = new ArrayList<>();
+    }
+
+    public void addReviewId(String reviewId) {
+        this.reviewsId.add(reviewId);
     }
 }
 
