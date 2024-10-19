@@ -1,6 +1,7 @@
 package com.puccampinas.backendp5noname.services;
 
 
+import com.puccampinas.backendp5noname.ResourceNotFoundException;
 import com.puccampinas.backendp5noname.domain.*;
 import com.puccampinas.backendp5noname.domain.vo.IngredientVO;
 import com.puccampinas.backendp5noname.dtos.*;
@@ -46,10 +47,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     private IngredientRecipeService ingredientRecipeService;
 
-
-
-
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByLogin(username).orElseThrow(() -> new UsernameNotFoundException("username not found") );
@@ -58,7 +55,6 @@ public class UserService implements UserDetailsService {
     public User findById(String id) {
         return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("user id not found")  );
     }
-
 
     public User existUser(User user) {
         return userRepository.findByLogin(user.getLogin())
@@ -121,12 +117,9 @@ public class UserService implements UserDetailsService {
         return user.getNutritionalValuesUser();
     }
 
-
     public List<Recipe> recipesFromUser(User user) {
         return user.getRecipes();
     }
-
-
 
     public void deleteIngredientFromUser(User user, String ingredientId) throws ChangeSetPersister.NotFoundException {
 
@@ -225,6 +218,13 @@ public class UserService implements UserDetailsService {
                     }
                 });
 
+        userRepository.save(user);
+    }
+
+    public void addReviewIdToUser(String userId, String reviewId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
+        user.addReviewId(reviewId);
         userRepository.save(user);
     }
 }

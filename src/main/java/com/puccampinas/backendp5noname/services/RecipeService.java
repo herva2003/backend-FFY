@@ -19,6 +19,7 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatClient;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -123,8 +124,8 @@ public class RecipeService {
         return this.recipeRepository.findById(id).orElse(null);
     }
 
-    public List<Recipe> getAllRecipes() {
-        return this.recipeRepository.findAll();
+    public List<Recipe> getAllRecipes(Pageable pageable) {
+        return recipeRepository.findAll(pageable).getContent();
     }
 
     public Recipe getRecipeById(String recipeId) {

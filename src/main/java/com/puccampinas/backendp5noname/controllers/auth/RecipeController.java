@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -41,9 +43,11 @@ public class RecipeController {
     }
 
     @GetMapping("/getRecipes")
-    public List<Recipe> getAllRecipes() {
-        logger.info("Recebendo requisição para /getRecipes");
-        List<Recipe> recipes = recipeService.getAllRecipes();
+    public List<Recipe> getAllRecipes(@RequestParam(defaultValue = "0") int page,
+                                      @RequestParam(defaultValue = "10") int limit) {
+        logger.info("Recebendo requisição para /getRecipes com page: " + page + ", limit: " + limit);
+        Pageable pageable = PageRequest.of(page, limit);
+        List<Recipe> recipes = recipeService.getAllRecipes(pageable);
         logger.info("Retornando receitas: " + recipes);
         return recipes;
     }

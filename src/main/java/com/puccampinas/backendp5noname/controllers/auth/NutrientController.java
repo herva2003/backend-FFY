@@ -27,5 +27,4 @@ public class NutrientController {
                 .collect(Collectors.toList());
         return new ResponseEntity<>(ingredients, HttpStatus.OK);
     }
-
 }

@@ -2,10 +2,11 @@ package com.puccampinas.backendp5noname.services;
 
 import com.puccampinas.backendp5noname.ResourceNotFoundException;
 import com.puccampinas.backendp5noname.domain.Review;
+import com.puccampinas.backendp5noname.dtos.ReviewDTO;
 import com.puccampinas.backendp5noname.repositories.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
+
 import java.util.List;
 
 @Service
@@ -18,16 +19,31 @@ public class ReviewService {
         this.reviewRepository = reviewRepository;
     }
 
+    public Review addReview(ReviewDTO review) {
+        return reviewRepository.save(new Review(review));
+    }
+
     public List<Review> getAllReviews() {
         return reviewRepository.findAll();
     }
 
-    public Review createReview(Review review) {
-        review.setCreatedAt(LocalDateTime.now());
+    public Review getReviewById(String id) {
+        return reviewRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found with id " + id));
+    }
+
+    public Review updateReview(String id, Review reviewDetails) {
+        Review review = getReviewById(id);
+
+        review.setTitle(reviewDetails.getTitle());
+        review.setDescription(reviewDetails.getDescription());
+        review.setRating(reviewDetails.getRating());
+
         return reviewRepository.save(review);
     }
 
-    public Review getReviewById(String reviewId) {
-        return reviewRepository.findById(reviewId).orElseThrow(() -> new ResourceNotFoundException("Review not found"));
+    public void deleteReview(String id) {
+        Review review = getReviewById(id);
+        reviewRepository.delete(review);
     }
 }

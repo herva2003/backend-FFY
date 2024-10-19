@@ -25,7 +25,6 @@ public class Topic {
         this.description = data.description();
         this.createdBy = data.createdBy();
         this.createdAt = LocalDateTime.now();
-
     }
 
     // Getters e Setters

@@ -20,8 +20,7 @@ import java.util.List;
 @SecurityRequirement(name = "bearer-key")
 public class TopicController {
     @Autowired
-    private  TopicService topicService;
-
+    private TopicService topicService;
 
     @GetMapping("/")
     public List<Topic> getAllTopics() {

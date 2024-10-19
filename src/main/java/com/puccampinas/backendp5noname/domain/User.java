@@ -57,6 +57,8 @@ public class User implements UserDetails {
 
     private List<String> intolerances;
 
+    private List<String> reviewsId = new ArrayList<>();
+
     @DocumentReference
     private List<Ingredient> shoppingList;
 
@@ -78,9 +80,14 @@ public class User implements UserDetails {
         this.diets = new ArrayList<>();
         this.allergies = new ArrayList<>();
         this.intolerances = new ArrayList<>();
+        this.reviewsId = new ArrayList<>();
         this.shoppingList = new ArrayList<>();
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void addReviewId(String reviewId) {
+        this.reviewsId.add(reviewId);
     }
 
     @Override

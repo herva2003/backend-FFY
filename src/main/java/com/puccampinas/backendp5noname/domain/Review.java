@@ -1,5 +1,7 @@
 package com.puccampinas.backendp5noname.domain;
 
+import com.puccampinas.backendp5noname.dtos.ReviewDTO;
+import com.puccampinas.backendp5noname.dtos.TopicDTO;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,12 +14,18 @@ public class Review {
     private String id;
     private String title;
     private String description;
-    private String createdBy;
     private LocalDateTime createdAt;
-    private Float rating;
+    private Integer rating;
 
     public Review() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public Review(ReviewDTO data) {
+        this.title = data.title();
+        this.description = data.description();
+        this.createdAt = LocalDateTime.now();
+        this.rating = data.rating();
     }
 
     // Getters e Setters
@@ -46,14 +54,6 @@ public class Review {
         this.description = description;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -62,20 +62,11 @@ public class Review {
         this.createdAt = createdAt;
     }
 
-    public Float getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(Float rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 }
-
-
-
-
-
-
-
-
-

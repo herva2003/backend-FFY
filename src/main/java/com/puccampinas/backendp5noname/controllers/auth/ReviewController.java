@@ -1,42 +1,58 @@
 package com.puccampinas.backendp5noname.controllers.auth;
 
 import com.puccampinas.backendp5noname.domain.Review;
+import com.puccampinas.backendp5noname.domain.User;
+import com.puccampinas.backendp5noname.dtos.ReviewDTO;
 import com.puccampinas.backendp5noname.services.ReviewService;
+import com.puccampinas.backendp5noname.services.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/reviews")
-@CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("/api/v1/review")
+@SecurityRequirement(name = "bearer-key")
 public class ReviewController {
 
-    private final ReviewService reviewService;
+    @Autowired
+    private ReviewService reviewService;
 
     @Autowired
-    public ReviewController(ReviewService reviewService) {
-        this.reviewService = reviewService;
+    private UserService userService;
+
+    @PostMapping("/")
+    public Review createReview(@RequestBody ReviewDTO review) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal(); // Obtenha o objeto User autenticado
+        String userId = user.getId(); // Extraia o ID do usuário
+        System.out.println("UserID from context: " + userId); // Log do userId extraído do contexto
+
+        Review newReview = reviewService.addReview(review);
+        userService.addReviewIdToUser(userId, newReview.getId());
+        return newReview;
     }
 
-    @GetMapping
+    @GetMapping("/")
     public List<Review> getAllReviews() {
         return reviewService.getAllReviews();
     }
 
-    @PostMapping
-    public Review createReview(@RequestBody Review review) {
-        return reviewService.createReview(review);
+    @GetMapping("/{id}")
+    public Review getReviewById(@PathVariable String id) {
+        return reviewService.getReviewById(id);
     }
 
-    @GetMapping("/{reviewId}")
-    public Review getReview(@PathVariable String reviewId) {
-        return reviewService.getReviewById(reviewId);
+    @PutMapping("/{id}")
+    public Review updateReview(@PathVariable String id, @RequestBody Review reviewDetails) {
+        return reviewService.updateReview(id, reviewDetails);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteReview(@PathVariable String id) {
+        reviewService.deleteReview(id);
     }
 }
