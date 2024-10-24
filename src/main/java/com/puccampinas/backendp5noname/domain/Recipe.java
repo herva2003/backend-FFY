@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Getter
@@ -31,7 +32,7 @@ public class Recipe {
     private LocalDateTime createdAt;
     @DocumentReference
     private NutritionalValues nutritionalValues;
-    private List<Like> likes = new ArrayList<>();
+    private List<String> likes = new ArrayList<>();
     private List<Comment> comments = new ArrayList<>();
     private List<String> reviewsId = new ArrayList<>();
 
@@ -49,4 +50,3 @@ public class Recipe {
         this.reviewsId.add(reviewId);
     }
 }
-

@@ -51,6 +51,8 @@ public class User implements UserDetails {
     private List<String> allergies;
     private List<String> intolerances;
     private List<String> reviewsId = new ArrayList<>();
+    private List<String> likedRecipes = new ArrayList<>();
+    private List<String> recipesDone = new ArrayList<>();
 
     @DocumentReference
     private List<Ingredient> shoppingList;
@@ -69,10 +71,12 @@ public class User implements UserDetails {
         this.status = StatusUser.ATIVO;
         this.ingredients = new ArrayList<>();
         this.recipes = new ArrayList<>();
+        this.recipesDone = new ArrayList<>();
         this.nutritionalValuesUser = new ArrayList<>();
         this.diets = new ArrayList<>();
         this.allergies = new ArrayList<>();
         this.intolerances = new ArrayList<>();
+        this.likedRecipes = new ArrayList<>();
         this.reviewsId = new ArrayList<>();
         this.shoppingList = new ArrayList<>();
         this.createdAt = LocalDateTime.now();

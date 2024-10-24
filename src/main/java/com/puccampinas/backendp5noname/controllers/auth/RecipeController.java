@@ -62,9 +62,14 @@ public class RecipeController {
         return recipeService.getRecipeById(recipeId);
     }
 
-    @PostMapping("/likes")
-    public void addLike(@RequestBody LikeDTO userId) {
-        recipeService.addLike(userId.recipeId(), userId);
+    @PostMapping("/like")
+    public void addLike(@RequestBody LikeDTO likeDTO) {
+        recipeService.addLike(likeDTO);
+    }
+
+    @PostMapping("/unlike")
+    public void removeLike(@RequestBody LikeDTO likeDTO) {
+        recipeService.removeLike(likeDTO);
     }
 
     @PostMapping("/comment")
