@@ -123,6 +123,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+
     @PostMapping("/nv/")
     public ResponseEntity<ApiResponse<NutritionalValuesUser>> addNutrientValuesFromRecipe(@AuthenticationPrincipal User user, @RequestBody NutritionalValuesUserDoubleDTO data) {
 
