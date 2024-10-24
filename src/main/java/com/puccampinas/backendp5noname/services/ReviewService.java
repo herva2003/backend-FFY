@@ -26,4 +26,28 @@ public class ReviewService {
     public List<Review> getReviewsByRecipeId(String recipeId) {
         return reviewRepository.findByRecipeId(recipeId);
     }
+
+    public List<Review> getAllReviews() {
+        return reviewRepository.findAll();
+    }
+
+    public Review getReviewById(String id) {
+        return reviewRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found with id " + id));
+    }
+
+    public Review updateReview(String id, Review reviewDetails) {
+        Review review = getReviewById(id);
+
+        review.setTitle(reviewDetails.getTitle());
+        review.setDescription(reviewDetails.getDescription());
+        review.setRating(reviewDetails.getRating());
+
+        return reviewRepository.save(review);
+    }
+
+    public void deleteReview(String id) {
+        Review review = getReviewById(id);
+        reviewRepository.delete(review);
+    }
 }

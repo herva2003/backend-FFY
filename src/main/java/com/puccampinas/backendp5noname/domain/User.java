@@ -81,6 +81,8 @@ public class User implements UserDetails {
         this.shoppingList = new ArrayList<>();
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.recipesDone = new ArrayList<>();
+        this.likedRecipes = new ArrayList<>();
     }
 
     public void addReviewId(String reviewId) {

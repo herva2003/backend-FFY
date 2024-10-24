@@ -23,6 +23,7 @@ public class RecipeDTO {
     private NutritionalValuesDoubleDTO nutritionalValues;
     @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
     private LocalDateTime generatedAt;
+    private List<String> reviews;
     private List<String> reviewsId;
     private int rating;
 }

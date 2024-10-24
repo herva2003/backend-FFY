@@ -3,6 +3,7 @@ package com.puccampinas.backendp5noname.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.puccampinas.backendp5noname.dtos.RecipeDTO;
+import java.util.Collection;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

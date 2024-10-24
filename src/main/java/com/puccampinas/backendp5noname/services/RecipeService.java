@@ -3,13 +3,17 @@ package com.puccampinas.backendp5noname.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.puccampinas.backendp5noname.domain.*;
+import com.puccampinas.backendp5noname.domain.Comment;
+import com.puccampinas.backendp5noname.domain.Like;
+import com.puccampinas.backendp5noname.domain.Recipe;
+import com.puccampinas.backendp5noname.domain.User;
 import com.puccampinas.backendp5noname.dtos.CommentDTO;
 import com.puccampinas.backendp5noname.dtos.LikeDTO;
 import com.puccampinas.backendp5noname.dtos.RecipeDTO;
 import com.puccampinas.backendp5noname.dtos.RecipeInfoDTO;
 import com.puccampinas.backendp5noname.ResourceNotFoundException;
 import com.puccampinas.backendp5noname.repositories.RecipeRepository;
+import com.puccampinas.backendp5noname.domain.*;
 import com.puccampinas.backendp5noname.repositories.ReviewRepository;
 import com.puccampinas.backendp5noname.repositories.UserRepository;
 import org.bson.types.ObjectId;
@@ -139,13 +143,10 @@ public class RecipeService {
     public void addLike(LikeDTO likeDTO) {
         Recipe recipe = recipeRepository.findById(likeDTO.recipeId())
                 .orElseThrow(() -> new ResourceNotFoundException("Recipe not found with id: " + likeDTO.recipeId()));
-
         User user = userRepository.findById(likeDTO.userId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + likeDTO.userId()));
-
         recipe.getLikes().add(likeDTO.userId());
         user.getLikedRecipes().add(likeDTO.recipeId());
-
         recipeRepository.save(recipe);
         userRepository.save(user);
     }
@@ -153,15 +154,21 @@ public class RecipeService {
     public void removeLike(LikeDTO likeDTO) {
         Recipe recipe = recipeRepository.findById(likeDTO.recipeId())
                 .orElseThrow(() -> new ResourceNotFoundException("Recipe not found with id: " + likeDTO.recipeId()));
-
         User user = userRepository.findById(likeDTO.userId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + likeDTO.userId()));
-
         recipe.getLikes().remove(likeDTO.userId());
         user.getLikedRecipes().remove(likeDTO.recipeId());
-
         recipeRepository.save(recipe);
         userRepository.save(user);
+    }
+
+    public long countReviewsByRecipeId(String recipeId) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Recipe not found with id " + recipeId));
+        return recipe.getReviewsId().size();
+    }
+    public Recipe findById(String id) {
+        return recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Recipe not found"));
     }
 
     public void addComment(String recipeId, CommentDTO comment) {
@@ -175,15 +182,5 @@ public class RecipeService {
                 .orElseThrow(() -> new ResourceNotFoundException("Recipe not found with id " + recipeId));
         recipe.addReviewId(reviewId);
         recipeRepository.save(recipe);
-    }
-
-    public long countReviewsByRecipeId(String recipeId) {
-        Recipe recipe = recipeRepository.findById(recipeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Recipe not found with id " + recipeId));
-        return recipe.getReviewsId().size();
-    }
-
-    public Recipe findById(String id) {
-        return recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Recipe not found"));
     }
 }

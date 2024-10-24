@@ -66,7 +66,6 @@ public class RecipeController {
     public void addLike(@RequestBody LikeDTO likeDTO) {
         recipeService.addLike(likeDTO);
     }
-
     @PostMapping("/unlike")
     public void removeLike(@RequestBody LikeDTO likeDTO) {
         recipeService.removeLike(likeDTO);
