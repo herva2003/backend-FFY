@@ -17,10 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    @Bean
-    public AccessTokenFilter accessTokenFilter() {
-        return new AccessTokenFilter();
-    }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -45,7 +42,6 @@ public class WebSecurityConfig {
                     req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
                     req.anyRequest().authenticated();
                 })
-                .addFilterBefore(accessTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
