@@ -7,7 +7,6 @@ import com.puccampinas.backendp5noname.domain.vo.IngredientVO;
 import com.puccampinas.backendp5noname.dtos.*;
 import com.puccampinas.backendp5noname.repositories.RefreshTokenRepository;
 import com.puccampinas.backendp5noname.repositories.UserRepository;
-import com.puccampinas.backendp5noname.services.auth.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,9 +29,7 @@ public class UserService implements UserDetailsService {
     private RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
-    private TokenService tokenService;
 
-    @Autowired
     private IngredientService ingredientService;
 
     @Autowired
