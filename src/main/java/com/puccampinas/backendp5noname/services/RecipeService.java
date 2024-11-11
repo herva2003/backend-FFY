@@ -131,8 +131,8 @@ public class RecipeService {
         return this.recipeRepository.findById(id).orElse(null);
     }
 
-    public List<Recipe> getAllRecipes(Pageable pageable) {
-        return recipeRepository.findAll(pageable).getContent();
+    public List<Recipe> getAllRecipes() {
+        return recipeRepository.findAll();
     }
 
     public Recipe getRecipeById(String recipeId) {

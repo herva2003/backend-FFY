@@ -40,9 +40,9 @@ public class UserController {
     }
 
     @GetMapping("/ingredient")
-    public ResponseEntity<ListApiResponse<Ingredient>> myIngredients(@AuthenticationPrincipal User user) {
-        List<Ingredient> userIngredients = this.userService.ingredientsFromUser(user);
-        ListApiResponse<Ingredient> response = new ListApiResponse<>(HttpStatus.OK, "User Ingredients", userIngredients);
+    public ResponseEntity<ListApiResponse<UserIngredient>> myIngredients(@AuthenticationPrincipal User user) {
+        List<UserIngredient> userIngredients = this.userService.ingredientsFromUser(user);
+        ListApiResponse<UserIngredient> response = new ListApiResponse<>(HttpStatus.OK, "User Ingredients", userIngredients);
         return ResponseEntity.ok(response);
     }
 
@@ -62,9 +62,9 @@ public class UserController {
     }
 
     @GetMapping("/shoppList")
-    public ResponseEntity<ListApiResponse<Ingredient>> myShoppList(@AuthenticationPrincipal User user) {
-        List<Ingredient> userIngredients = this.userService.ingredientsFromShoppList(user);
-        ListApiResponse<Ingredient> response = new ListApiResponse<>(HttpStatus.OK, "User Shopping list", userIngredients);
+    public ResponseEntity<ListApiResponse<UserIngredient>> myShoppList(@AuthenticationPrincipal User user) {
+        List<UserIngredient> userIngredients = this.userService.ingredientsFromShoppList(user);
+        ListApiResponse<UserIngredient> response = new ListApiResponse<>(HttpStatus.OK, "User Shopping list", userIngredients);
         return ResponseEntity.ok(response);
     }
 
@@ -108,11 +108,13 @@ public class UserController {
     }
 
     @PostMapping("/recipe")
-    public ResponseEntity<ApiResponse<RecipeDTO>> updateUser(@AuthenticationPrincipal User user, @RequestBody RecipeDTO data) {
+    public ResponseEntity<ApiResponse<RecipeDTO>> addRecipeToUser(@AuthenticationPrincipal User user, @RequestBody RecipeDTO data) {
         User existingUser = this.userService.existUser(user);
-        if( existingUser == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         RecipeDTO recipe = this.userService.addRecipeToUser(user, data);
-        return  ResponseEntity.ok(new ApiResponse<RecipeDTO>(HttpStatus.OK, "add recipe in user",recipe));
+        return ResponseEntity.ok(new ApiResponse<RecipeDTO>(HttpStatus.OK, "Recipe added to user", recipe));
     }
 
     @DeleteMapping("/recipe/{recipeId}")
@@ -122,7 +124,6 @@ public class UserController {
         userService.deleteRecipeFromUser(user, recipeId);
         return ResponseEntity.noContent().build();
     }
-
 
     @PostMapping("/nv/")
     public ResponseEntity<ApiResponse<NutritionalValuesUser>> addNutrientValuesFromRecipe(@AuthenticationPrincipal User user, @RequestBody NutritionalValuesUserDoubleDTO data) {
@@ -134,5 +135,26 @@ public class UserController {
         }
         NutritionalValuesUser updatedNv = this.userService.addNutritionalValuesInUser(existingUser, data);
         return ResponseEntity.ok(new ApiResponse<NutritionalValuesUser>(HttpStatus.OK, "Nv updated with nutrient values", updatedNv));
+    }
+
+    @PostMapping("/nutritionalValuesFromRecipe/{recipeId}")
+    public ResponseEntity<ApiResponse<NutritionalValuesUser>> addNutritionalValuesFromRecipe(@AuthenticationPrincipal User user, @PathVariable String recipeId) {
+        User existingUser = userService.existUser(user);
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        NutritionalValuesUser nutritionalValuesUser = userService.addNutritionalValuesFromRecipe(existingUser, recipeId);
+        return ResponseEntity.ok(new ApiResponse<NutritionalValuesUser>(HttpStatus.OK, "Nutritional values added", nutritionalValuesUser));
+    }
+
+    @PostMapping("/checkAndRemoveIngredients/{recipeId}")
+    public ResponseEntity<String> checkAndRemoveIngredients(@AuthenticationPrincipal User user, @PathVariable String recipeId) {
+        User existingUser = userService.existUser(user);
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return userService.checkAndRemoveIngredients(existingUser, recipeId);
     }
 }

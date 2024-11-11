@@ -6,8 +6,8 @@ import com.puccampinas.backendp5noname.dtos.SignupDTO;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,21 +41,17 @@ public class User implements UserDetails {
     private Double weight;
     @NonNull
     private StatusUser status;
-    @DocumentReference
-    private List<Ingredient> ingredients;
-    @DocumentReference
+    private List<UserIngredient> ingredients;
+    @DBRef
     private List<NutritionalValuesUser> nutritionalValuesUser;
-    @DocumentReference
-    private List<Recipe> recipes;
+    private List<String> recipes;
     private List<String> diets;
     private List<String> allergies;
     private List<String> intolerances;
     private List<String> reviewsId = new ArrayList<>();
     private List<String> likedRecipes = new ArrayList<>();
     private List<String> recipesDone = new ArrayList<>();
-
-    @DocumentReference
-    private List<Ingredient> shoppingList;
+    private List<UserIngredient> shoppingList;
 
     @JsonFormat(pattern="dd/MM/yyyy 'as' HH:mm:ss")
     private LocalDateTime createdAt;
@@ -117,9 +113,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public String getId() {
-        return this.id;
     }
 }

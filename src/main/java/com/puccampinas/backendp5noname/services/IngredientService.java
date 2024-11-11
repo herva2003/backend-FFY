@@ -12,11 +12,8 @@ import java.util.List;
 @Service
 public class IngredientService {
 
-
     @Autowired
     private IngredientRepository ingredientRepository;
-
-
 
     public List<Ingredient> allIngredients() {
         return this.ingredientRepository.findAllIdAndDescription();
@@ -26,4 +23,8 @@ public class IngredientService {
         return ingredientRepository.findAllById(ids);
     }
 
+    public Ingredient findById(String id) {
+        return ingredientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ingredient not found"));
+    }
 }

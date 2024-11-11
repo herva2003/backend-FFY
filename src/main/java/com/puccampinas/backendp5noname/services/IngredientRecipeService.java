@@ -19,10 +19,8 @@ public class IngredientRecipeService {
 
     public List<IngredientRecipe> convertAndSave(List<IngredientRecipeDTO> dtos) {
         List<IngredientRecipe> ingredients = dtos.stream()
-                .map(IngredientRecipe::new)
+                .map(dto -> new IngredientRecipe(dto.id(), dto.name(), dto.quantity()))
                 .collect(Collectors.toList());
         return ingredientRecipeRepository.saveAll(ingredients);
     }
-
-
 }

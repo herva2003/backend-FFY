@@ -12,6 +12,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,6 +28,7 @@ import java.time.LocalDateTime;
 public class NutritionalValuesUser {
     @Id
     private String id;
+    private String quantity;
     private Double Energy_kcal;
     private Double Protein_g;
     private Double Saturated_fats_g;
@@ -146,6 +154,10 @@ public class NutritionalValuesUser {
 
     private Double parseDouble(String value) {
         if (value == null) return null;
-        return Double.parseDouble(value);
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }

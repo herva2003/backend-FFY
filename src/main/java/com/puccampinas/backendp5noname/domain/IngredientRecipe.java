@@ -16,8 +16,7 @@ public class IngredientRecipe {
     @Id
     private String id;
     private String name;
-    private Double quantity;
-
+    private String quantity;
 
     public IngredientRecipe(IngredientRecipeDTO ingredient) {
         this.name = ingredient.name();

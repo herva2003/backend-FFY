@@ -12,10 +12,11 @@ import lombok.*;
 public class IngredientVO {
     String name;
     String id;
-
+    String quantity;
 
     public IngredientVO(Ingredient ingredient){
         this.id = ingredient.getId();
         this.name  = ingredient.getDescrip();
+        this.quantity = ingredient.getQuantity();
     }
 }

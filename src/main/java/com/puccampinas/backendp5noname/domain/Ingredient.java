@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Ingredient {
     @Id
     private String id;
-    private double quantity;
+    private String quantity;
     private int NDB_No;
     private String Descrip;
     private double Energy_kcal;
@@ -44,5 +44,4 @@ public class Ingredient {
     private double VitA_mcg;
     private double VitE_mg;
     private double VitD2_mcg;
-
 }
