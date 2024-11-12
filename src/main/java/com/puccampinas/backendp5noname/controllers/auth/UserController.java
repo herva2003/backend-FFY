@@ -15,6 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -68,12 +69,14 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/shoppList/")
-    public ResponseEntity<Void> deleteIngredientShoppList(@AuthenticationPrincipal User user, @RequestBody List<IngredientIDDTO> ids) throws ChangeSetPersister.NotFoundException {
+    @DeleteMapping("/shoppList")
+    public ResponseEntity<Void> deleteIngredientShoppList(@AuthenticationPrincipal User user, @RequestBody List<IngredientIDDTO> ingredientIds) {
         User existingUser = userService.existUser(user);
-        if (existingUser == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        userService.deleteIngredientsFromShoppList(user, ids);
-        return ResponseEntity.noContent().build();
+        if (existingUser == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        userService.deleteIngredientsFromShoppList(existingUser, ingredientIds);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/nv")
@@ -99,12 +102,15 @@ public class UserController {
         return  ResponseEntity.ok(new ApiResponse<UserUpdateDTO>(HttpStatus.OK, "updated data from user",updateData));
     }
 
-    @DeleteMapping("/ingredient/{id}")
-    public ResponseEntity<Void> deleteIngredient(@AuthenticationPrincipal User user, @PathVariable String id) throws ChangeSetPersister.NotFoundException {
+    @DeleteMapping("/ingredient")
+    public ResponseEntity<Void> deleteIngredients(@AuthenticationPrincipal User user, @RequestBody List<String> ingredientIds) {
         User existingUser = userService.existUser(user);
-        if (existingUser == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        userService.deleteIngredientFromUser(user, id);
-        return ResponseEntity.noContent().build();
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        userService.deleteIngredients(existingUser, ingredientIds);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/recipe")
@@ -149,12 +155,34 @@ public class UserController {
     }
 
     @PostMapping("/checkAndRemoveIngredients/{recipeId}")
-    public ResponseEntity<String> checkAndRemoveIngredients(@AuthenticationPrincipal User user, @PathVariable String recipeId) {
+    public ResponseEntity<Map<String, Object>> checkAndRemoveIngredients(@AuthenticationPrincipal User user, @PathVariable String recipeId) {
         User existingUser = userService.existUser(user);
         if (existingUser == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
         return userService.checkAndRemoveIngredients(existingUser, recipeId);
+    }
+
+    @PostMapping("/addToShoppingList")
+    public ResponseEntity<Void> addToShoppingList(@AuthenticationPrincipal User user, @RequestBody List<UserIngredient> ingredients) {
+        User existingUser = userService.existUser(user);
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        userService.addToShoppingList(existingUser, ingredients);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/moveIngredients")
+    public ResponseEntity<Void> moveIngredients(@AuthenticationPrincipal User user, @RequestBody List<UserIngredient> ingredientsToMove) {
+        User existingUser = userService.existUser(user);
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        userService.moveIngredientsFromShoppingListToIngredients(existingUser, ingredientsToMove);
+        return ResponseEntity.ok().build();
     }
 }

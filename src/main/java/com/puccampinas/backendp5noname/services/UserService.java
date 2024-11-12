@@ -19,9 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -185,13 +183,10 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteIngredientFromUser(User user, String ingredientId) throws ChangeSetPersister.NotFoundException {
-        List<UserIngredient> userIngredients = user.getIngredients();
-        boolean removed = userIngredients.removeIf(ingredient -> ingredient.getIngredientId().equals(ingredientId));
+    public void deleteIngredients(User user, List<String> ingredientIds) {
+        List<UserIngredient> ingredients = user.getIngredients();
 
-        if (!removed) {
-            throw new ChangeSetPersister.NotFoundException();
-        }
+        ingredients.removeIf(ingredient -> ingredientIds.contains(ingredient.getIngredientId()));
 
         userRepository.save(user);
     }
@@ -213,7 +208,7 @@ public class UserService implements UserDetailsService {
 
 
         ingredientIds.stream()
-                .map(IngredientIDDTO::id)
+                .map(IngredientIDDTO::ingredientId)
                 .forEach(ingredientId -> {
                     boolean removed = userIngredients.removeIf(ingredient -> ingredient.getIngredientId().equals(ingredientId));
                     if (!removed) {
@@ -274,9 +269,10 @@ public class UserService implements UserDetailsService {
 
     public void deleteIngredientsFromShoppList(User user, List<IngredientIDDTO> ingredientIds)  {
         List<UserIngredient> userIngredients = user.getShoppingList();
+        log.info("userIngredients: {}", userIngredients);
 
         ingredientIds.stream()
-                .map(IngredientIDDTO::id)
+                .map(IngredientIDDTO::ingredientId)
                 .forEach(ingredientId -> {
                     boolean removed = userIngredients.removeIf(ingredient -> ingredient.getIngredientId().equals(ingredientId));
                     if (!removed) {
@@ -298,8 +294,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    @Transactional
-    public ResponseEntity<String> checkAndRemoveIngredients(User user, String recipeId) {
+    public ResponseEntity<Map<String, Object>> checkAndRemoveIngredients(User user, String recipeId) {
         Recipe recipe = recipeService.findById(recipeId);
         if (recipe == null || recipe.getIngredients() == null) {
             throw new RuntimeException("Recipe or ingredients not found");
@@ -307,12 +302,8 @@ public class UserService implements UserDetailsService {
 
         List<String> missingIngredients = new ArrayList<>();
         List<UserIngredient> userIngredients = user.getIngredients();
-        List<UserIngredient> shoppingList = user.getShoppingList();
-
-        log.info("Starting ingredient check for recipe: {}", recipeId);
 
         for (IngredientRecipe ingredient : recipe.getIngredients()) {
-            log.info("Checking ingredient: {}", ingredient.getId());
             Optional<UserIngredient> userIngredientOpt = userIngredients.stream()
                     .filter(ui -> ui.getIngredientId().equals(ingredient.getId()))
                     .findFirst();
@@ -322,35 +313,76 @@ public class UserService implements UserDetailsService {
                 double currentQuantity = Double.parseDouble(userIngredient.getQuantity());
                 double requiredQuantity = Double.parseDouble(ingredient.getQuantity());
 
-                log.info("Current quantity: {}, Required quantity: {}", currentQuantity, requiredQuantity);
-
                 if (currentQuantity >= requiredQuantity) {
                     userIngredient.setQuantity(String.valueOf(currentQuantity - requiredQuantity));
-                    log.info("Updated quantity of ingredient {}: {}", ingredient.getId(), userIngredient.getQuantity());
                 } else {
-                    log.info("Insufficient quantity for ingredient {}", ingredient.getId());
                     missingIngredients.add(ingredient.getId());
                 }
             } else {
-                log.info("Ingredient {} not found in user ingredients", ingredient.getId());
                 missingIngredients.add(ingredient.getId());
             }
         }
 
         if (!missingIngredients.isEmpty()) {
-            log.info("Missing ingredients: {}", missingIngredients);
-            missingIngredients.forEach(missingId -> {
-                boolean existsInShoppingList = shoppingList.stream()
-                        .anyMatch(sl -> sl.getIngredientId().equals(missingId));
-                if (!existsInShoppingList) {
-                    shoppingList.add(new UserIngredient(missingId, "0"));
-                }
-            });
-            userRepository.save(user);
-            return new ResponseEntity<>("Some ingredients are missing. They have been added to your shopping list.", HttpStatus.BAD_REQUEST);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Some ingredients are missing.");
+            response.put("missingIngredients", missingIngredients);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
         userRepository.save(user);
-        return new ResponseEntity<>("Ingredients are sufficient and have been deducted.", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    public void addToShoppingList(User user, List<UserIngredient> ingredients) {
+        List<UserIngredient> shoppingList = user.getShoppingList();
+
+        for (UserIngredient ingredient : ingredients) {
+            boolean existsInShoppingList = shoppingList.stream()
+                    .anyMatch(sl -> sl.getIngredientId().equals(ingredient.getIngredientId()));
+            if (!existsInShoppingList) {
+                shoppingList.add(ingredient);
+            }
+        }
+
+        userRepository.save(user);
+    }
+
+    public void moveIngredientsFromShoppingListToIngredients(User user, List<UserIngredient> ingredientsToMove) {
+        List<UserIngredient> shoppingList = user.getShoppingList();
+        List<UserIngredient> ingredients = user.getIngredients();
+
+        System.out.println("Shopping List: " + shoppingList);
+        System.out.println("Ingredients to Move: " + ingredientsToMove);
+
+        for (UserIngredient ingredientToMove : ingredientsToMove) {
+            Optional<UserIngredient> optionalShoppingIngredient = shoppingList.stream()
+                    .filter(ingredient -> ingredient.getIngredientId().equals(ingredientToMove.getIngredientId()))
+                    .findFirst();
+
+            if (optionalShoppingIngredient.isPresent()) {
+                UserIngredient shoppingIngredient = optionalShoppingIngredient.get();
+
+                shoppingList.remove(shoppingIngredient);
+
+                Optional<UserIngredient> optionalUserIngredient = ingredients.stream()
+                        .filter(ingredient -> ingredient.getIngredientId().equals(ingredientToMove.getIngredientId()))
+                        .findFirst();
+
+                if (optionalUserIngredient.isPresent()) {
+                    UserIngredient userIngredient = optionalUserIngredient.get();
+                    double currentQuantity = Double.parseDouble(userIngredient.getQuantity());
+                    double addedQuantity = Double.parseDouble(ingredientToMove.getQuantity());
+                    userIngredient.setQuantity(String.valueOf(currentQuantity + addedQuantity));
+                } else {
+                    ingredients.add(new UserIngredient(ingredientToMove.getIngredientId(), ingredientToMove.getQuantity()));
+                }
+            } else {
+                System.out.println("Ingredient not found in shopping list: " + ingredientToMove.getIngredientId());
+                throw new RuntimeException("Ingredient not found in shopping list");
+            }
+        }
+
+        userRepository.save(user);
     }
 }

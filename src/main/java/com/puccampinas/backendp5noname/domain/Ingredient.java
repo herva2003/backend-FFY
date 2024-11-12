@@ -44,4 +44,9 @@ public class Ingredient {
     private double VitA_mcg;
     private double VitE_mg;
     private double VitD2_mcg;
+
+    public Ingredient(String ingredientId, String quantity) {
+        this.id = ingredientId;
+        this.quantity = quantity;
+    }
 }
