@@ -97,7 +97,6 @@ public class UserController {
     public ResponseEntity<ApiResponse<UserUpdateDTO>> updateUser(@AuthenticationPrincipal User user, @RequestBody UserUpdateDTO data) {
         User existingUser = this.userService.existUser(user);
         if( existingUser == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        if(userService.isExistingEmailFromUser(data.login(), existingUser))  return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         UserUpdateDTO updateData = this.userService.updateUser(user, data);
         return  ResponseEntity.ok(new ApiResponse<UserUpdateDTO>(HttpStatus.OK, "updated data from user",updateData));
     }

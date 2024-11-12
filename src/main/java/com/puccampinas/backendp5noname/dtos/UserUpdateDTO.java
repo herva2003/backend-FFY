@@ -5,5 +5,5 @@ import lombok.NonNull;
 
 import java.util.List;
 
-public record UserUpdateDTO(String login, String fullName, Double height, Double weight, List<String> diets, List<String> allergies, List<String> intolerances) {
+public record UserUpdateDTO(String fullName, Double height, Double weight, List<String> diets, List<String> allergies, List<String> intolerances) {
 }

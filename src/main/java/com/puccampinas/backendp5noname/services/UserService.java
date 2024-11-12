@@ -192,7 +192,6 @@ public class UserService implements UserDetailsService {
     }
 
     public UserUpdateDTO updateUser(User user, UserUpdateDTO userUpdateDTO) {
-        user.setLogin(userUpdateDTO.login());
         user.setHeight(userUpdateDTO.height());
         user.setFullName(userUpdateDTO.fullName());
         user.setWeight(userUpdateDTO.weight());
@@ -221,12 +220,6 @@ public class UserService implements UserDetailsService {
                 });
 
         userRepository.save(user);
-    }
-
-    public boolean isExistingEmailFromUser(String email, User user){
-        Optional<User> userQuery = this.userRepository.findByLogin(email);
-        return userQuery.isPresent() && !userQuery.get().getId().equals(user.getId());
-
     }
 
     public NutritionalValuesUser addNutritionalValuesInUser(User user, NutritionalValuesUserDoubleDTO data) {
