@@ -48,6 +48,11 @@ public class ReviewController {
         return recipeService.countReviewsByRecipeId(recipeId);
     }
 
+    @GetMapping("/rating")
+    public double ratingReviewsByRecipeId(@RequestParam String recipeId) {
+        return reviewService.ratingReviewsByRecipeId(recipeId);
+    }
+
     @GetMapping("/recipeId")
     public List<Review> getReviewsByRecipeId(@RequestParam String recipeId) {
         return reviewService.getReviewsByRecipeId(recipeId);

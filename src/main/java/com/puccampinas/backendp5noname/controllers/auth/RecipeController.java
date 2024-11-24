@@ -38,9 +38,13 @@ public class RecipeController {
     }
 
     @GetMapping("/getRecipes")
-    public List<Recipe> getAllRecipes() {
-        List<Recipe> recipes = recipeService.getAllRecipes();
-        return recipes;
+    public List<Recipe> getAllRecipes(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "limit", defaultValue = "9") int limit,
+            @RequestParam(value = "search", defaultValue = "") String search
+    ) {
+        int offset = (page - 1) * limit;
+        return recipeService.getAllRecipes(offset, limit, search);
     }
 
     @PostMapping("/generate")

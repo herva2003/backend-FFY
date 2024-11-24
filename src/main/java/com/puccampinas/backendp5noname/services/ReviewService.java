@@ -1,6 +1,7 @@
 package com.puccampinas.backendp5noname.services;
 
 import com.puccampinas.backendp5noname.ResourceNotFoundException;
+import com.puccampinas.backendp5noname.domain.Recipe;
 import com.puccampinas.backendp5noname.domain.Review;
 import com.puccampinas.backendp5noname.dtos.ReviewDTO;
 import com.puccampinas.backendp5noname.repositories.ReviewRepository;
@@ -49,5 +50,17 @@ public class ReviewService {
     public void deleteReview(String id) {
         Review review = getReviewById(id);
         reviewRepository.delete(review);
+    }
+
+    public double ratingReviewsByRecipeId(String recipeId) {
+        List<Review> reviews = reviewRepository.findByRecipeId(recipeId);
+        if (reviews.isEmpty()) {
+            throw new ResourceNotFoundException("No reviews found for recipe with id " + recipeId);
+        }
+        double averageRating = reviews.stream()
+                .mapToDouble(Review::getRating)
+                .average()
+                .orElse(0.0);
+        return averageRating;
     }
 }

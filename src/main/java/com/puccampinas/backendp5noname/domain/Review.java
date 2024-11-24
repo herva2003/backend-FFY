@@ -20,7 +20,7 @@ public class Review {
     private String title;
     private String description;
     private LocalDateTime createdAt;
-    private Integer rating;
+    private Long rating;
     private String recipeId;
 
     public Review(ReviewDTO data) {

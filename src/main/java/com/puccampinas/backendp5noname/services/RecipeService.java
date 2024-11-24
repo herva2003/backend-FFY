@@ -24,6 +24,7 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatClient;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -160,8 +161,13 @@ public class RecipeService {
         return this.recipeRepository.findById(id).orElse(null);
     }
 
-    public List<Recipe> getAllRecipes() {
-        return recipeRepository.findAll();
+    public List<Recipe> getAllRecipes(int offset, int limit, String search) {
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+        if (search.isEmpty()) {
+            return recipeRepository.findAll(pageable).getContent();
+        } else {
+            return recipeRepository.findByNameContainingIgnoreCase(search, pageable).getContent();
+        }
     }
 
     public Recipe getRecipeById(String recipeId) {
@@ -196,6 +202,7 @@ public class RecipeService {
                 .orElseThrow(() -> new ResourceNotFoundException("Recipe not found with id " + recipeId));
         return recipe.getReviewsId().size();
     }
+
     public Recipe findById(String id) {
         return recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Recipe not found"));
     }

@@ -87,8 +87,13 @@ public class UserController {
     }
 
     @GetMapping("/recipe")
-    public ResponseEntity<ListApiResponse<Recipe>> myRecipes(@AuthenticationPrincipal User user) {
-        List<Recipe> userRecipes = this.userService.recipesFromUser(user);
+    public ResponseEntity<ListApiResponse<Recipe>> myRecipes(
+            @AuthenticationPrincipal User user,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            @RequestParam(value = "search", required = false) String searchQuery
+    ) {
+        List<Recipe> userRecipes = userService.recipesFromUser(user, searchQuery, page, limit);
         ListApiResponse<Recipe> response = new ListApiResponse<>(HttpStatus.OK, "User Recipes", userRecipes);
         return ResponseEntity.ok(response);
     }

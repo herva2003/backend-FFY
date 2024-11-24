@@ -176,11 +176,23 @@ public class UserService implements UserDetailsService {
         return user.getNutritionalValuesUser();
     }
 
-    public List<Recipe> recipesFromUser(User user) {
+    public List<Recipe> recipesFromUser(User user, String searchQuery, int page, int limit) {
         List<String> recipeIds = user.getRecipes();
-        return recipeIds.stream()
+        List<Recipe> recipes = recipeIds.stream()
                 .map(recipeId -> recipeService.findById(recipeId))
                 .collect(Collectors.toList());
+
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            String lowerCaseSearchQuery = searchQuery.toLowerCase();
+            recipes = recipes.stream()
+                    .filter(recipe -> recipe.getName().toLowerCase().contains(lowerCaseSearchQuery))
+                    .collect(Collectors.toList());
+        }
+
+        int start = (page - 1) * limit;
+        int end = Math.min(start + limit, recipes.size());
+
+        return recipes.subList(start, end);
     }
 
     public void deleteIngredients(User user, List<String> ingredientIds) {
