@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  springboot-server:
+    image: food-for-you-backend
+    ports:
+      - "8080:8080"
+
+  react-vite:
+    image: food-for-you-frontend
+    ports:
+      - "3000:3000"
+
+  IA-findder:
+    image: food-for-you-ia
+    ports:
+      - "5000:5000"

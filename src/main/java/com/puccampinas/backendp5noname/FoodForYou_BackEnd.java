@@ -6,12 +6,10 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @SpringBootApplication
 @EnableMongoRepositories
-public class BackEndP5NonameApplication {
+public class FoodForYou_BackEnd {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BackEndP5NonameApplication.class, args);
+		SpringApplication.run(FoodForYou_BackEnd.class, args);
 	}
 
 }
-
-
